@@ -889,12 +889,6 @@ export default function Page() {
                       </button>
                     ))}
                   </div>
-                  
-                  <div className="font-mono text-[9px] text-[#8f8fa0] mt-3 uppercase tracking-wider italic">
-                    {printMaterial === 'PLA' && 'Fórmula PLA: (Horas × R$ 10) + (Metros × R$ 0,50)'}
-                    {printMaterial === 'PETG' && 'Fórmula PETG: (Horas × R$ 10) + (Metros × R$ 0,90)'}
-                    {printMaterial === 'ABS' && 'Fórmula ABS: (Horas × R$ 5) + (Metros × R$ 0,35)'}
-                  </div>
                 </div>
 
                 {/* 3D Printer Inputs */}
