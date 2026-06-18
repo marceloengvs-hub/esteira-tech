@@ -95,6 +95,8 @@ export default function Page() {
 
   // Simulador de Custos - Impressão 3D
   const [printMaterial, setPrintMaterial] = React.useState<'PLA' | 'PETG' | 'ABS'>('PLA');
+  const [printHours, setPrintHours] = React.useState<number | ''>('');
+  const [printMinutes, setPrintMinutes] = React.useState<number | ''>('');
   const [filamentMetres, setFilamentMetres] = React.useState<number | ''>('');
   const [printQuantity, setPrintQuantity] = React.useState<number>(1);
   const [projectType, setProjectType] = React.useState<'ENSINO' | 'PESQUISA'>('ENSINO');
@@ -112,11 +114,16 @@ export default function Page() {
   const laserCutCost = (laserCutTime === '' ? 0 : laserCutTime) * laserCutPricePerMin;
   const laserEngraveCost = (laserEngraveTime === '' ? 0 : laserEngraveTime) * laserEngravePricePerMin;
 
+  const totalPrintHours = (printHours === '' ? 0 : printHours) + (printMinutes === '' ? 0 : printMinutes) / 60;
   const metersVal = filamentMetres === '' ? 0 : filamentMetres;
   
   const precoMetro = PRECO_METRO[printMaterial];
   const custoMaterial = metersVal * precoMetro;
-  const valorCheio = 14.00 + custoMaterial;
+
+  // A taxa fixa de setup de R$ 14,00 cobre os primeiros 30 minutos (0.5h) de máquina
+  const horasExcedentes = Math.max(0, totalPrintHours - 0.5);
+  const custoTempo = horasExcedentes * 10.00; // R$ 10,00 por hora excedente
+  const valorCheio = 14.00 + custoTempo + custoMaterial;
   
   const printCostPerPiece = valorCheio * (projectType === 'PESQUISA' ? 0.5 : 1.0);
   const totalPrintCost = printCostPerPiece * printQuantity;
@@ -132,6 +139,8 @@ export default function Page() {
     setLaserEngraveTime('');
     setLaserEngravePricePerMin(2.5);
     setPrintMaterial('PLA');
+    setPrintHours('');
+    setPrintMinutes('');
     setFilamentMetres('');
     setPrintQuantity(1);
     setProjectType('ENSINO');
@@ -895,14 +904,45 @@ export default function Page() {
                 <div className="p-5 bg-[#131313] border border-[#454655]/20 rounded-none space-y-4">
                   <div className="flex justify-between items-center">
                     <h4 className="font-mono text-xs font-bold text-white uppercase tracking-wider">
-                      Consumo de Filamento
+                      Tempo & Consumo
                     </h4>
                     <span className="font-mono text-xs text-[#d5cb00] bg-[#b8af00]/10 px-2.5 py-1 font-bold border border-[#b8af00]/20">
                       Custo Total: R$ {totalPrintCost.toFixed(2)}
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-1 gap-3 font-mono text-[10px]">
+                  <div className="grid grid-cols-3 gap-3 font-mono text-[10px]">
+                    <div>
+                      <label className="block text-[#8f8fa0] uppercase tracking-wider mb-1">Horas de Impressão</label>
+                      <div className="relative">
+                        <input 
+                          type="number"
+                          min="0"
+                          placeholder="0"
+                          value={printHours}
+                          onChange={(e) => setPrintHours(e.target.value === '' ? '' : Math.max(0, Number(e.target.value)))}
+                          className="w-full bg-[#0e0e0e] border border-[#454655]/50 px-3 py-2 text-white font-mono focus:outline-none focus:border-[#b8af00]"
+                        />
+                        <span className="absolute right-2.5 top-2 text-[#8f8fa0] text-[9px]">h</span>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-[#8f8fa0] uppercase tracking-wider mb-1">Minutos de Impressão</label>
+                      <div className="relative">
+                        <input 
+                          type="number"
+                          min="0"
+                          max="59"
+                          placeholder="0"
+                          value={printMinutes}
+                          onChange={(e) => setPrintMinutes(e.target.value === '' ? '' : Math.max(0, Math.min(59, Number(e.target.value))))}
+                          className="w-full bg-[#0e0e0e] border border-[#454655]/50 px-3 py-2 text-white font-mono focus:outline-none focus:border-[#b8af00]"
+                        />
+                        <span className="absolute right-2.5 top-2 text-[#8f8fa0] text-[9px]">min</span>
+                      </div>
+                    </div>
+
                     <div>
                       <label className="block text-[#8f8fa0] uppercase tracking-wider mb-1">
                         Consumo (Metros)
@@ -921,13 +961,14 @@ export default function Page() {
                           m
                         </span>
                       </div>
-                      <div className="text-[9px] text-[#8f8fa0] mt-1">
-                        Fórmula: Setup Fixo R$ 14,00 + Insumo ({
-                          printMaterial === 'ABS' ? 'R$ 0,33/m' :
-                          printMaterial === 'PLA' ? 'R$ 0,50/m' : 'R$ 0,58/m'
-                        })
-                      </div>
                     </div>
+                  </div>
+
+                  <div className="text-[9px] text-[#8f8fa0] font-mono leading-tight">
+                    Fórmula: Setup R$ 14,00 (cobre os primeiros 30 min) + R$ 10,00/h excedente + Insumo ({
+                      printMaterial === 'ABS' ? 'R$ 0,33/m' :
+                      printMaterial === 'PLA' ? 'R$ 0,50/m' : 'R$ 0,58/m'
+                    })
                   </div>
 
                   <div className="grid grid-cols-2 gap-4 font-mono text-[10px] pt-2 border-t border-[#454655]/10">
