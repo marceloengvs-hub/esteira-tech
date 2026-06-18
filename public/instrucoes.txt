@@ -1,0 +1,8 @@
+Este diretório 'public' serve para armazenar seus arquivos de mídia estáticos no Next.js (como imagens, logos, etc).
+
+Quando você colocar uma imagem aqui, por exemplo 'meu-projeto-cad.png', você poderá consumi-la no seu código Next.js diretamente como:
+'/meu-projeto-cad.png'
+
+As duas variáveis de imagem no topo do arquivo '/app/page.tsx' estão configuradas para facilitar essa substituição:
+- DETALHE_CAD_IMAGE_URL
+- PROTOTIPO_FISICO_IMAGE_URL

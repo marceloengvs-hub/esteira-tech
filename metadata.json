@@ -1,0 +1,6 @@
+{
+  "name": "Esteira Tech",
+  "description": "Landing page para os oficinas de Engenharia de Conforto e Fabricação Digital do IPElab da Universidade Federal de Goiás (UFG).",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
