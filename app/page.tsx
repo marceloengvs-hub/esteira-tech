@@ -900,33 +900,35 @@ export default function Page() {
                     </span>
                   </div>
                   
-                  <div className="grid grid-cols-2 gap-4 font-mono text-[10px]">
+                  <div className="grid grid-cols-3 gap-3 font-mono text-[10px]">
                     <div>
-                      <label className="block text-[#8f8fa0] uppercase tracking-wider mb-1">Tempo de Impressão</label>
-                      <div className="flex gap-2 items-center">
-                        <div className="relative flex-grow">
-                          <input 
-                            type="number"
-                            min="0"
-                            placeholder="h"
-                            value={printHours}
-                            onChange={(e) => setPrintHours(e.target.value === '' ? '' : Math.max(0, Number(e.target.value)))}
-                            className="w-full bg-[#0e0e0e] border border-[#454655]/50 px-2 py-2 text-white text-center font-mono focus:outline-none focus:border-[#b8af00]"
-                          />
-                          <span className="absolute right-2.5 top-2 text-[#8f8fa0] text-[9px]">h</span>
-                        </div>
-                        <div className="relative flex-grow">
-                          <input 
-                            type="number"
-                            min="0"
-                            max="59"
-                            placeholder="min"
-                            value={printMinutes}
-                            onChange={(e) => setPrintMinutes(e.target.value === '' ? '' : Math.max(0, Math.min(59, Number(e.target.value))))}
-                            className="w-full bg-[#0e0e0e] border border-[#454655]/50 px-2 py-2 text-white text-center font-mono focus:outline-none focus:border-[#b8af00]"
-                          />
-                          <span className="absolute right-2.5 top-2 text-[#8f8fa0] text-[9px]">min</span>
-                        </div>
+                      <label className="block text-[#8f8fa0] uppercase tracking-wider mb-1">Horas de Impressão</label>
+                      <div className="relative">
+                        <input 
+                          type="number"
+                          min="0"
+                          placeholder="0"
+                          value={printHours}
+                          onChange={(e) => setPrintHours(e.target.value === '' ? '' : Math.max(0, Number(e.target.value)))}
+                          className="w-full bg-[#0e0e0e] border border-[#454655]/50 px-3 py-2 text-white font-mono focus:outline-none focus:border-[#b8af00]"
+                        />
+                        <span className="absolute right-2.5 top-2 text-[#8f8fa0] text-[9px]">h</span>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-[#8f8fa0] uppercase tracking-wider mb-1">Minutos de Impressão</label>
+                      <div className="relative">
+                        <input 
+                          type="number"
+                          min="0"
+                          max="59"
+                          placeholder="0"
+                          value={printMinutes}
+                          onChange={(e) => setPrintMinutes(e.target.value === '' ? '' : Math.max(0, Math.min(59, Number(e.target.value))))}
+                          className="w-full bg-[#0e0e0e] border border-[#454655]/50 px-3 py-2 text-white font-mono focus:outline-none focus:border-[#b8af00]"
+                        />
+                        <span className="absolute right-2.5 top-2 text-[#8f8fa0] text-[9px]">min</span>
                       </div>
                     </div>
                     
@@ -937,12 +939,12 @@ export default function Page() {
                           type="number"
                           min="0"
                           step="0.1"
-                          placeholder="metros"
+                          placeholder="0"
                           value={filamentMetres}
                           onChange={(e) => setFilamentMetres(e.target.value === '' ? '' : Math.max(0, Number(e.target.value)))}
                           className="w-full bg-[#0e0e0e] border border-[#454655]/50 pr-7 pl-3 py-2 text-white font-mono focus:outline-none focus:border-[#b8af00]"
                         />
-                        <span className="absolute right-2.5 top-2 text-[#8f8fa0]">m</span>
+                        <span className="absolute right-2.5 top-2 text-[#8f8fa0] text-[9px]">m</span>
                       </div>
                     </div>
                   </div>
