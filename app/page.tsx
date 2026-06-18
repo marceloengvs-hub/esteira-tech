@@ -94,13 +94,22 @@ export default function Page() {
   const [laserEngravePricePerMin, setLaserEngravePricePerMin] = React.useState<number>(2.5);
 
   // Simulador de Custos - Impressão 3D
-  const [printMaterial, setPrintMaterial] = React.useState<'PLA' | 'PETG' | 'ABS'>('PLA');
+  const [printMaterial, setPrintMaterial] = React.useState<'PLA' | 'PETG' | 'ABS' | 'TPU' | 'RESINA'>('PLA');
   const [printHours, setPrintHours] = React.useState<number | ''>('');
   const [printMinutes, setPrintMinutes] = React.useState<number | ''>('');
   const [filamentMetres, setFilamentMetres] = React.useState<number | ''>('');
   const [printQuantity, setPrintQuantity] = React.useState<number>(1);
+  const [projectType, setProjectType] = React.useState<'ENSINO' | 'PESQUISA'>('ENSINO');
 
   // Cálculos de Custos Dinâmicos
+  const PRICING_TABLE = {
+    PLA: { hora: 10.0, insumo: 1.00 },
+    PETG: { hora: 10.0, insumo: 1.50 },
+    ABS: { hora: 10.0, insumo: 0.70 },
+    TPU: { hora: 10.0, insumo: 2.00 },
+    RESINA: { hora: 15.0, insumo: 0.80 }
+  };
+
   const mdfArea = (mdfWidth / 100) * (mdfHeight / 100);
   const mdfCost = mdfArea * mdfPricePerM2;
 
@@ -110,14 +119,11 @@ export default function Page() {
   const totalPrintHours = (printHours === '' ? 0 : printHours) + (printMinutes === '' ? 0 : printMinutes) / 60;
   const metersVal = filamentMetres === '' ? 0 : filamentMetres;
   
-  let printCostPerPiece = 0;
-  if (printMaterial === 'PLA') {
-    printCostPerPiece = (totalPrintHours * 10) + (metersVal * 0.50);
-  } else if (printMaterial === 'PETG') {
-    printCostPerPiece = (totalPrintHours * 10) + (metersVal * 0.90);
-  } else if (printMaterial === 'ABS') {
-    printCostPerPiece = (totalPrintHours * 5) + (metersVal * 0.35);
-  }
+  const config = PRICING_TABLE[printMaterial];
+  const custoTempo = totalPrintHours * config.hora;
+  const custoMaterial = metersVal * config.insumo;
+  
+  const printCostPerPiece = (custoTempo + custoMaterial) * (projectType === 'PESQUISA' ? 0.5 : 1.0);
   const totalPrintCost = printCostPerPiece * printQuantity;
 
   const estimatedTotalCost = mdfCost + laserCutCost + laserEngraveCost + totalPrintCost;
@@ -135,6 +141,7 @@ export default function Page() {
     setPrintMinutes('');
     setFilamentMetres('');
     setPrintQuantity(1);
+    setProjectType('ENSINO');
   };
 
   // Load leads and check connection on client mount
@@ -870,11 +877,11 @@ export default function Page() {
                   </h3>
                 </div>
 
-                {/* Filament Material Selector */}
+                {/* Material / Polymer Selector */}
                 <div className="p-5 bg-[#131313] border border-[#454655]/20 mb-6 rounded-none">
-                  <h4 className="font-mono text-xs font-bold text-white uppercase tracking-wider mb-3">Material de Filamento</h4>
-                  <div className="grid grid-cols-3 gap-2">
-                    {(['PLA', 'PETG', 'ABS'] as const).map((mat) => (
+                  <h4 className="font-mono text-xs font-bold text-white uppercase tracking-wider mb-3">Material / Polímero</h4>
+                  <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
+                    {(['PLA', 'PETG', 'ABS', 'TPU', 'RESINA'] as const).map((mat) => (
                       <button
                         key={mat}
                         type="button"
@@ -894,7 +901,7 @@ export default function Page() {
                 {/* 3D Printer Inputs */}
                 <div className="p-5 bg-[#131313] border border-[#454655]/20 rounded-none space-y-4">
                   <div className="flex justify-between items-center">
-                    <h4 className="font-mono text-xs font-bold text-white uppercase tracking-wider">Tempo & Filamento</h4>
+                    <h4 className="font-mono text-xs font-bold text-white uppercase tracking-wider">Tempo & Consumo</h4>
                     <span className="font-mono text-xs text-[#d5cb00] bg-[#b8af00]/10 px-2.5 py-1 font-bold border border-[#b8af00]/20">
                       Custo Total: R$ {totalPrintCost.toFixed(2)}
                     </span>
@@ -933,7 +940,9 @@ export default function Page() {
                     </div>
                     
                     <div>
-                      <label className="block text-[#8f8fa0] uppercase tracking-wider mb-1">Comprimento (Metros)</label>
+                      <label className="block text-[#8f8fa0] uppercase tracking-wider mb-1">
+                        {printMaterial === 'RESINA' ? 'Consumo (mL)' : 'Consumo (Metros)'}
+                      </label>
                       <div className="relative">
                         <input 
                           type="number"
@@ -944,7 +953,9 @@ export default function Page() {
                           onChange={(e) => setFilamentMetres(e.target.value === '' ? '' : Math.max(0, Number(e.target.value)))}
                           className="w-full bg-[#0e0e0e] border border-[#454655]/50 pr-7 pl-3 py-2 text-white font-mono focus:outline-none focus:border-[#b8af00]"
                         />
-                        <span className="absolute right-2.5 top-2 text-[#8f8fa0] text-[9px]">m</span>
+                        <span className="absolute right-2.5 top-2 text-[#8f8fa0] text-[9px]">
+                          {printMaterial === 'RESINA' ? 'mL' : 'm'}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -961,10 +972,25 @@ export default function Page() {
                       />
                     </div>
                     
-                    <div className="flex flex-col justify-end">
-                      <div className="font-mono text-[10px] text-right text-[#8f8fa0]">
-                        Custo por peça: <strong className="text-white">R$ {printCostPerPiece.toFixed(2)}</strong>
-                      </div>
+                    <div>
+                      <label className="block text-[#8f8fa0] uppercase tracking-wider mb-1">Tipo de Projeto</label>
+                      <select
+                        value={projectType}
+                        onChange={(e) => setProjectType(e.target.value as 'ENSINO' | 'PESQUISA')}
+                        className="w-full bg-[#0e0e0e] border border-[#454655]/50 px-3 py-2 text-white font-mono focus:outline-none focus:border-[#b8af00]"
+                      >
+                        <option value="ENSINO">Ensino / Extensão</option>
+                        <option value="PESQUISA">Pesquisa (50% Desc.)</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="flex justify-between items-center font-mono text-[10px] pt-2 border-t border-[#454655]/10">
+                    <div className="text-[#8f8fa0]">
+                      Custo por peça: <strong className="text-white">R$ {printCostPerPiece.toFixed(2)}</strong>
+                    </div>
+                    <div className="text-[#8f8fa0]">
+                      Subtotal: <strong className="text-white">R$ {totalPrintCost.toFixed(2)}</strong>
                     </div>
                   </div>
                 </div>
