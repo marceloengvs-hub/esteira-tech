@@ -94,7 +94,7 @@ export default function Page() {
   const [laserEngravePricePerMin, setLaserEngravePricePerMin] = React.useState<number>(2.5);
 
   // Simulador de Custos - Impressão 3D
-  const [printMaterial, setPrintMaterial] = React.useState<'PLA' | 'PETG' | 'ABS' | 'TPU' | 'RESINA'>('PLA');
+  const [printMaterial, setPrintMaterial] = React.useState<'PLA' | 'PETG' | 'ABS'>('PLA');
   const [printHours, setPrintHours] = React.useState<number | ''>('');
   const [printMinutes, setPrintMinutes] = React.useState<number | ''>('');
   const [filamentMetres, setFilamentMetres] = React.useState<number | ''>('');
@@ -106,12 +106,10 @@ export default function Page() {
   const PRICING_TABLE = {
     PLA: { hora: 10.0, insumo: 1.00 },
     PETG: { hora: 10.0, insumo: 1.50 },
-    ABS: { hora: 10.0, insumo: 0.70 },
-    TPU: { hora: 10.0, insumo: 2.00 },
-    RESINA: { hora: 15.0, insumo: 0.80 }
+    ABS: { hora: 10.0, insumo: 0.70 }
   };
 
-  const PRECO_METRO_BALCAO: Record<string, number> = {
+  const PRECO_METRO_BALCAO: Record<'PLA' | 'PETG' | 'ABS', number> = {
     ABS: 1.0 / 3.0,
     PLA: 0.50,
     PETG: 3.5 / 6.0
@@ -130,7 +128,7 @@ export default function Page() {
   const custoTempo = totalPrintHours * config.hora;
   const custoMaterial = metersVal * config.insumo;
   
-  const precoMetroBalcao = PRECO_METRO_BALCAO[printMaterial] !== undefined ? PRECO_METRO_BALCAO[printMaterial] : 0.50;
+  const precoMetroBalcao = PRECO_METRO_BALCAO[printMaterial];
   const custoMaterialBalcao = metersVal * precoMetroBalcao;
   const precoBalcaoNormal = 14.00 + custoMaterialBalcao;
   
@@ -923,8 +921,8 @@ export default function Page() {
                 {/* Material / Polymer Selector */}
                 <div className="p-5 bg-[#131313] border border-[#454655]/20 mb-6 rounded-none">
                   <h4 className="font-mono text-xs font-bold text-white uppercase tracking-wider mb-3">Material / Polímero</h4>
-                  <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
-                    {(['PLA', 'PETG', 'ABS', 'TPU', 'RESINA'] as const).map((mat) => (
+                  <div className="grid grid-cols-3 gap-2">
+                    {(['ABS', 'PLA', 'PETG'] as const).map((mat) => (
                       <button
                         key={mat}
                         type="button"
@@ -987,7 +985,7 @@ export default function Page() {
                       
                       <div>
                         <label className="block text-[#8f8fa0] uppercase tracking-wider mb-1">
-                          {printMaterial === 'RESINA' ? 'Consumo (mL)' : 'Consumo (Metros)'}
+                          Consumo (Metros)
                         </label>
                         <div className="relative">
                           <input 
@@ -1000,7 +998,7 @@ export default function Page() {
                             className="w-full bg-[#0e0e0e] border border-[#454655]/50 pr-7 pl-3 py-2 text-white font-mono focus:outline-none focus:border-[#b8af00]"
                           />
                           <span className="absolute right-2.5 top-2 text-[#8f8fa0] text-[9px]">
-                            {printMaterial === 'RESINA' ? 'mL' : 'm'}
+                            m
                           </span>
                         </div>
                       </div>
@@ -1009,7 +1007,7 @@ export default function Page() {
                     <div className="grid grid-cols-1 gap-3 font-mono text-[10px]">
                       <div>
                         <label className="block text-[#8f8fa0] uppercase tracking-wider mb-1">
-                          {printMaterial === 'RESINA' ? 'Consumo (mL)' : 'Consumo (Metros)'}
+                          Consumo (Metros)
                         </label>
                         <div className="relative">
                           <input 
@@ -1022,14 +1020,13 @@ export default function Page() {
                             className="w-full bg-[#0e0e0e] border border-[#454655]/50 pr-7 pl-3 py-2 text-white font-mono focus:outline-none focus:border-[#b8af00]"
                           />
                           <span className="absolute right-2.5 top-2 text-[#8f8fa0] text-[9px]">
-                            {printMaterial === 'RESINA' ? 'mL' : 'm'}
+                            m
                           </span>
                         </div>
                         <div className="text-[9px] text-[#8f8fa0] mt-1">
                           Balcão: R$ 14,00 Setup + Insumo ({
                             printMaterial === 'ABS' ? 'R$ 0,33/m' :
-                            printMaterial === 'PLA' ? 'R$ 0,50/m' :
-                            printMaterial === 'PETG' ? 'R$ 0,58/m' : 'R$ 0,50/m (Padrão)'
+                            printMaterial === 'PLA' ? 'R$ 0,50/m' : 'R$ 0,58/m'
                           })
                         </div>
                       </div>
