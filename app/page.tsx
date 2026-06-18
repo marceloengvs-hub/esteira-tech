@@ -122,6 +122,21 @@ export default function Page() {
 
   const estimatedTotalCost = mdfCost + laserCutCost + laserEngraveCost + totalPrintCost;
 
+  const handleResetSimulation = () => {
+    setMdfWidth(32);
+    setMdfHeight(32);
+    setMdfPricePerM2(95);
+    setLaserCutTime('');
+    setLaserCutPricePerMin(2.5);
+    setLaserEngraveTime('');
+    setLaserEngravePricePerMin(2.5);
+    setPrintMaterial('PLA');
+    setPrintHours('');
+    setPrintMinutes('');
+    setFilamentMetres('');
+    setPrintQuantity(1);
+  };
+
   // Load leads and check connection on client mount
   React.useEffect(() => {
     const loadLeadsData = async () => {
@@ -973,8 +988,17 @@ export default function Page() {
                 <p className="font-mono text-xs text-[#8f8fa0] mt-0.5">Soma da estrutura, usinagem laser e polimerização 3D</p>
               </div>
             </div>
-            <div className="font-display text-2xl md:text-3xl text-[#b5835a] font-black tracking-tight border-b-2 border-[#b5835a] pb-1">
-              R$ {estimatedTotalCost.toFixed(2)}
+            <div className="flex items-center gap-6 self-stretch md:self-auto justify-between md:justify-end w-full md:w-auto">
+              <button
+                type="button"
+                onClick={handleResetSimulation}
+                className="px-4 py-2 border border-[#454655]/40 hover:border-[#b5835a] hover:text-[#b5835a] text-[10px] font-mono font-bold text-[#8f8fa0] uppercase tracking-wider transition-all duration-300 cursor-pointer active:scale-95 bg-[#131313]/50"
+              >
+                Limpar Simulação
+              </button>
+              <div className="font-display text-2xl md:text-3xl text-[#b5835a] font-black tracking-tight border-b-2 border-[#b5835a] pb-1">
+                R$ {estimatedTotalCost.toFixed(2)}
+              </div>
             </div>
           </div>
 
