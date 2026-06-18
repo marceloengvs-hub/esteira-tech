@@ -82,6 +82,46 @@ export default function Page() {
   const [selectedSpec, setSelectedSpec] = React.useState<'k1' | 'duplotech'>('k1');
   const [dbConnected, setDbConnected] = React.useState(false);
 
+  // Simulador de Custos - MDF e Laser
+  const [mdfWidth, setMdfWidth] = React.useState<number>(32);
+  const [mdfHeight, setMdfHeight] = React.useState<number>(32);
+  const [mdfPricePerM2, setMdfPricePerM2] = React.useState<number>(95);
+
+  const [laserCutTime, setLaserCutTime] = React.useState<number | ''>('');
+  const [laserCutPricePerMin, setLaserCutPricePerMin] = React.useState<number>(2.5);
+
+  const [laserEngraveTime, setLaserEngraveTime] = React.useState<number | ''>('');
+  const [laserEngravePricePerMin, setLaserEngravePricePerMin] = React.useState<number>(2.5);
+
+  // Simulador de Custos - Impressão 3D
+  const [printMaterial, setPrintMaterial] = React.useState<'PLA' | 'PETG' | 'ABS'>('PLA');
+  const [printHours, setPrintHours] = React.useState<number | ''>('');
+  const [printMinutes, setPrintMinutes] = React.useState<number | ''>('');
+  const [filamentMetres, setFilamentMetres] = React.useState<number | ''>('');
+  const [printQuantity, setPrintQuantity] = React.useState<number>(1);
+
+  // Cálculos de Custos Dinâmicos
+  const mdfArea = (mdfWidth / 100) * (mdfHeight / 100);
+  const mdfCost = mdfArea * mdfPricePerM2;
+
+  const laserCutCost = (laserCutTime === '' ? 0 : laserCutTime) * laserCutPricePerMin;
+  const laserEngraveCost = (laserEngraveTime === '' ? 0 : laserEngraveTime) * laserEngravePricePerMin;
+
+  const totalPrintHours = (printHours === '' ? 0 : printHours) + (printMinutes === '' ? 0 : printMinutes) / 60;
+  const metersVal = filamentMetres === '' ? 0 : filamentMetres;
+  
+  let printCostPerPiece = 0;
+  if (printMaterial === 'PLA') {
+    printCostPerPiece = (totalPrintHours * 10) + (metersVal * 0.50);
+  } else if (printMaterial === 'PETG') {
+    printCostPerPiece = (totalPrintHours * 10) + (metersVal * 0.90);
+  } else if (printMaterial === 'ABS') {
+    printCostPerPiece = (totalPrintHours * 5) + (metersVal * 0.35);
+  }
+  const totalPrintCost = printCostPerPiece * printQuantity;
+
+  const estimatedTotalCost = mdfCost + laserCutCost + laserEngraveCost + totalPrintCost;
+
   // Load leads and check connection on client mount
   React.useEffect(() => {
     const loadLeadsData = async () => {
@@ -181,6 +221,12 @@ export default function Page() {
               className="text-[#c5c5d7] hover:text-[#bcc2ff] font-medium text-sm transition-colors duration-200"
             >
               Galeria
+            </button>
+            <button 
+              onClick={() => scrollToSection('simulador-custos')} 
+              className="text-[#c5c5d7] hover:text-[#bcc2ff] font-medium text-sm transition-colors duration-200"
+            >
+              Simulador
             </button>
             <button 
               onClick={() => scrollToSection('inscricao')} 
@@ -650,6 +696,291 @@ export default function Page() {
         </div>
       </section>
 
+      {/* Cost Simulator Section */}
+      <section className="py-20 px-4 md:px-10 bg-[#131313] border-t border-[#454655]/20" id="simulador-custos">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center max-w-3xl mx-auto mb-12">
+            <span className="text-[#b5835a] text-xs font-mono font-bold tracking-widest uppercase">PLANEJAMENTO FINANCEIRO MAKER</span>
+            <h2 className="font-display text-3xl md:text-5xl text-white font-black uppercase mt-2 tracking-tight">
+              Simulador de Custos de Material
+            </h2>
+            <p className="font-mono text-xs md:text-sm text-[#c5c5d7] mt-4 leading-relaxed">
+              Calcule dinamicamente o custo aproximado de fabricação das suas peças estruturais de MDF e partes impressas em 3D.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+            
+            {/* COLUMN 1: MDF & LASER CUTTING */}
+            <div className="p-8 bg-[#0e0e0e] border border-[#454655]/30 hard-shadow-mdf glow-mdf flex flex-col justify-between space-y-6">
+              <div>
+                <div className="flex items-center gap-2 mb-6 border-b border-[#454655]/20 pb-4">
+                  <Layers className="text-[#b5835a] w-5 h-5" />
+                  <h3 className="font-display text-lg text-white font-bold uppercase tracking-tight">
+                    Estrutura & Usinagem Laser
+                  </h3>
+                </div>
+
+                {/* MDF Sheet Component */}
+                <div className="p-5 bg-[#131313] border border-[#454655]/20 mb-6 rounded-none">
+                  <div className="flex justify-between items-center mb-4">
+                    <h4 className="font-mono text-xs font-bold text-white uppercase tracking-wider">Chapa de MDF (3mm)</h4>
+                    <span className="font-mono text-xs text-[#b5835a] bg-[#b5835a]/10 px-2.5 py-1 font-bold border border-[#b5835a]/20">
+                      Custo: R$ {mdfCost.toFixed(2)}
+                    </span>
+                  </div>
+                  
+                  <div className="grid grid-cols-3 gap-3 font-mono text-[10px]">
+                    <div>
+                      <label className="block text-[#8f8fa0] uppercase tracking-wider mb-1">Largura (CM)</label>
+                      <input 
+                        type="number"
+                        min="0"
+                        value={mdfWidth}
+                        onChange={(e) => setMdfWidth(Math.max(0, Number(e.target.value)))}
+                        className="w-full bg-[#0e0e0e] border border-[#454655]/50 px-3 py-2 text-white font-mono focus:outline-none focus:border-[#b5835a]"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[#8f8fa0] uppercase tracking-wider mb-1">Altura (CM)</label>
+                      <input 
+                        type="number"
+                        min="0"
+                        value={mdfHeight}
+                        onChange={(e) => setMdfHeight(Math.max(0, Number(e.target.value)))}
+                        className="w-full bg-[#0e0e0e] border border-[#454655]/50 px-3 py-2 text-white font-mono focus:outline-none focus:border-[#b5835a]"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[#8f8fa0] uppercase tracking-wider mb-1">Preço (M²)</label>
+                      <div className="relative">
+                        <span className="absolute left-2.5 top-2 text-[#8f8fa0]">R$</span>
+                        <input 
+                          type="number"
+                          min="0"
+                          value={mdfPricePerM2}
+                          onChange={(e) => setMdfPricePerM2(Math.max(0, Number(e.target.value)))}
+                          className="w-full bg-[#0e0e0e] border border-[#454655]/50 pl-7 pr-2 py-2 text-white font-mono focus:outline-none focus:border-[#b5835a]"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Laser Cutting Component */}
+                <div className="p-5 bg-[#131313] border border-[#454655]/20 mb-6 rounded-none">
+                  <div className="flex justify-between items-center mb-4">
+                    <h4 className="font-mono text-xs font-bold text-white uppercase tracking-wider">Máquina (Corte)</h4>
+                    <span className="font-mono text-xs text-[#bcc2ff] bg-[#2e41d1]/10 px-2.5 py-1 font-bold border border-[#bcc2ff]/10">
+                      Custo: R$ {laserCutCost.toFixed(2)}
+                    </span>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4 font-mono text-[10px]">
+                    <div>
+                      <label className="block text-[#8f8fa0] uppercase tracking-wider mb-1">Tempo (MIN)</label>
+                      <input 
+                        type="number"
+                        min="0"
+                        placeholder="min"
+                        value={laserCutTime}
+                        onChange={(e) => setLaserCutTime(e.target.value === '' ? '' : Math.max(0, Number(e.target.value)))}
+                        className="w-full bg-[#0e0e0e] border border-[#454655]/50 px-3 py-2 text-white font-mono focus:outline-none focus:border-[#bcc2ff]"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[#8f8fa0] uppercase tracking-wider mb-1">Valor/MIN</label>
+                      <div className="relative">
+                        <span className="absolute left-2.5 top-2 text-[#8f8fa0]">R$</span>
+                        <input 
+                          type="number"
+                          min="0"
+                          step="0.1"
+                          value={laserCutPricePerMin}
+                          onChange={(e) => setLaserCutPricePerMin(Math.max(0, Number(e.target.value)))}
+                          className="w-full bg-[#0e0e0e] border border-[#454655]/50 pl-7 pr-2 py-2 text-white font-mono focus:outline-none focus:border-[#bcc2ff]"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Laser Engraving Component */}
+                <div className="p-5 bg-[#131313] border border-[#454655]/20 rounded-none">
+                  <div className="flex justify-between items-center mb-4">
+                    <h4 className="font-mono text-xs font-bold text-white uppercase tracking-wider">Máquina (Gravação)</h4>
+                    <span className="font-mono text-xs text-[#bcc2ff] bg-[#2e41d1]/10 px-2.5 py-1 font-bold border border-[#bcc2ff]/10">
+                      Custo: R$ {laserEngraveCost.toFixed(2)}
+                    </span>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4 font-mono text-[10px]">
+                    <div>
+                      <label className="block text-[#8f8fa0] uppercase tracking-wider mb-1">Tempo (MIN)</label>
+                      <input 
+                        type="number"
+                        min="0"
+                        placeholder="min"
+                        value={laserEngraveTime}
+                        onChange={(e) => setLaserEngraveTime(e.target.value === '' ? '' : Math.max(0, Number(e.target.value)))}
+                        className="w-full bg-[#0e0e0e] border border-[#454655]/50 px-3 py-2 text-white font-mono focus:outline-none focus:border-[#bcc2ff]"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[#8f8fa0] uppercase tracking-wider mb-1">Valor/MIN</label>
+                      <div className="relative">
+                        <span className="absolute left-2.5 top-2 text-[#8f8fa0]">R$</span>
+                        <input 
+                          type="number"
+                          min="0"
+                          step="0.1"
+                          value={laserEngravePricePerMin}
+                          onChange={(e) => setLaserEngravePricePerMin(Math.max(0, Number(e.target.value)))}
+                          className="w-full bg-[#0e0e0e] border border-[#454655]/50 pl-7 pr-2 py-2 text-white font-mono focus:outline-none focus:border-[#bcc2ff]"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* COLUMN 2: 3D PRINTING */}
+            <div className="p-8 bg-[#0e0e0e] border border-[#454655]/30 hard-shadow-yellow glow-yellow flex flex-col justify-between space-y-6">
+              <div>
+                <div className="flex items-center gap-2 mb-6 border-b border-[#454655]/20 pb-4">
+                  <Printer className="text-[#d5cb00] w-5 h-5" />
+                  <h3 className="font-display text-lg text-white font-bold uppercase tracking-tight">
+                    Polímero Impressão 3D
+                  </h3>
+                </div>
+
+                {/* Filament Material Selector */}
+                <div className="p-5 bg-[#131313] border border-[#454655]/20 mb-6 rounded-none">
+                  <h4 className="font-mono text-xs font-bold text-white uppercase tracking-wider mb-3">Material de Filamento</h4>
+                  <div className="grid grid-cols-3 gap-2">
+                    {(['PLA', 'PETG', 'ABS'] as const).map((mat) => (
+                      <button
+                        key={mat}
+                        type="button"
+                        onClick={() => setPrintMaterial(mat)}
+                        className={`py-2 text-xs font-mono font-bold border transition-all cursor-pointer ${
+                          printMaterial === mat
+                            ? 'bg-[#b8af00] text-black border-[#b8af00]'
+                            : 'bg-transparent text-[#d5cb00] border-[#b8af00]/40 hover:border-[#b8af00]'
+                        }`}
+                      >
+                        {mat}
+                      </button>
+                    ))}
+                  </div>
+                  
+                  <div className="font-mono text-[9px] text-[#8f8fa0] mt-3 uppercase tracking-wider italic">
+                    {printMaterial === 'PLA' && 'Fórmula PLA: (Horas × R$ 10) + (Metros × R$ 0,50)'}
+                    {printMaterial === 'PETG' && 'Fórmula PETG: (Horas × R$ 10) + (Metros × R$ 0,90)'}
+                    {printMaterial === 'ABS' && 'Fórmula ABS: (Horas × R$ 5) + (Metros × R$ 0,35)'}
+                  </div>
+                </div>
+
+                {/* 3D Printer Inputs */}
+                <div className="p-5 bg-[#131313] border border-[#454655]/20 rounded-none space-y-4">
+                  <div className="flex justify-between items-center">
+                    <h4 className="font-mono text-xs font-bold text-white uppercase tracking-wider">Tempo & Filamento</h4>
+                    <span className="font-mono text-xs text-[#d5cb00] bg-[#b8af00]/10 px-2.5 py-1 font-bold border border-[#b8af00]/20">
+                      Custo Total: R$ {totalPrintCost.toFixed(2)}
+                    </span>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4 font-mono text-[10px]">
+                    <div>
+                      <label className="block text-[#8f8fa0] uppercase tracking-wider mb-1">Tempo de Impressão</label>
+                      <div className="flex gap-2 items-center">
+                        <div className="relative flex-grow">
+                          <input 
+                            type="number"
+                            min="0"
+                            placeholder="h"
+                            value={printHours}
+                            onChange={(e) => setPrintHours(e.target.value === '' ? '' : Math.max(0, Number(e.target.value)))}
+                            className="w-full bg-[#0e0e0e] border border-[#454655]/50 px-2 py-2 text-white text-center font-mono focus:outline-none focus:border-[#b8af00]"
+                          />
+                          <span className="absolute right-2.5 top-2 text-[#8f8fa0] text-[9px]">h</span>
+                        </div>
+                        <div className="relative flex-grow">
+                          <input 
+                            type="number"
+                            min="0"
+                            max="59"
+                            placeholder="min"
+                            value={printMinutes}
+                            onChange={(e) => setPrintMinutes(e.target.value === '' ? '' : Math.max(0, Math.min(59, Number(e.target.value))))}
+                            className="w-full bg-[#0e0e0e] border border-[#454655]/50 px-2 py-2 text-white text-center font-mono focus:outline-none focus:border-[#b8af00]"
+                          />
+                          <span className="absolute right-2.5 top-2 text-[#8f8fa0] text-[9px]">min</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-[#8f8fa0] uppercase tracking-wider mb-1">Comprimento (Metros)</label>
+                      <div className="relative">
+                        <input 
+                          type="number"
+                          min="0"
+                          step="0.1"
+                          placeholder="metros"
+                          value={filamentMetres}
+                          onChange={(e) => setFilamentMetres(e.target.value === '' ? '' : Math.max(0, Number(e.target.value)))}
+                          className="w-full bg-[#0e0e0e] border border-[#454655]/50 pr-7 pl-3 py-2 text-white font-mono focus:outline-none focus:border-[#b8af00]"
+                        />
+                        <span className="absolute right-2.5 top-2 text-[#8f8fa0]">m</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4 font-mono text-[10px] pt-2 border-t border-[#454655]/10">
+                    <div>
+                      <label className="block text-[#8f8fa0] uppercase tracking-wider mb-1">Quantidade de Peças</label>
+                      <input 
+                        type="number"
+                        min="1"
+                        value={printQuantity}
+                        onChange={(e) => setPrintQuantity(Math.max(1, Number(e.target.value)))}
+                        className="w-full bg-[#0e0e0e] border border-[#454655]/50 px-3 py-2 text-white font-mono focus:outline-none focus:border-[#b8af00]"
+                      />
+                    </div>
+                    
+                    <div className="flex flex-col justify-end">
+                      <div className="font-mono text-[10px] text-right text-[#8f8fa0]">
+                        Custo por peça: <strong className="text-white">R$ {printCostPerPiece.toFixed(2)}</strong>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          {/* GRAND TOTAL ESTIMATION PANEL */}
+          <div className="max-w-6xl mx-auto mt-8 p-6 bg-[#0e0e0e] border border-[#454655]/40 flex flex-col md:flex-row justify-between items-center gap-4 glow-mdf border-[#b5835a]/20">
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-[#b5835a]/10 border border-[#b5835a]/30">
+                <Binary className="text-[#b5835a] w-6 h-6" />
+              </div>
+              <div>
+                <h4 className="font-display text-white font-bold uppercase text-sm tracking-wider">Custo Total Estimado</h4>
+                <p className="font-mono text-xs text-[#8f8fa0] mt-0.5">Soma da estrutura, usinagem laser e polimerização 3D</p>
+              </div>
+            </div>
+            <div className="font-display text-2xl md:text-3xl text-[#b5835a] font-black tracking-tight border-b-2 border-[#b5835a] pb-1">
+              R$ {estimatedTotalCost.toFixed(2)}
+            </div>
+          </div>
+
+        </div>
+      </section>
+
       {/* Oficina Registration / Capture Form (Formulário de Captura) */}
       <section className="py-20 px-4 md:px-10 bg-[#0e0e0e] relative" id="inscricao">
         <div className="max-w-6xl mx-auto">
@@ -945,6 +1276,13 @@ export default function Page() {
         >
           <Layers className="w-5 h-5" />
           <span className="text-[9px] font-bold uppercase">PROCESSO</span>
+        </button>
+        <button 
+          onClick={() => { setActiveTab('simulador'); scrollToSection('simulador-custos'); }}
+          className={`flex flex-col items-center gap-1 font-mono transition-colors ${activeTab === 'simulador' ? 'text-[#bcc2ff]' : 'text-[#8f8fa0]'}`}
+        >
+          <Wrench className="w-5 h-5" />
+          <span className="text-[9px] font-bold uppercase">SIMULADOR</span>
         </button>
         <button 
           onClick={() => { setActiveTab('suporte'); scrollToSection('inscricao'); }}
