@@ -20,6 +20,7 @@ import {
   Trash2,
   BookmarkCheck,
   ChevronRight,
+  ChevronLeft,
   Sparkles,
   Info
 } from 'lucide-react';
@@ -100,6 +101,7 @@ export default function Page() {
   const [filamentMetres, setFilamentMetres] = React.useState<number | ''>('');
   const [printQuantity, setPrintQuantity] = React.useState<number>(1);
   const [projectType, setProjectType] = React.useState<'ENSINO' | 'PESQUISA'>('ENSINO');
+  const [currentSlide, setCurrentSlide] = React.useState<number>(0);
 
   // Cálculos de Custos Dinâmicos
   const PRECO_METRO: Record<'PLA' | 'PETG' | 'ABS', number> = {
@@ -239,6 +241,12 @@ export default function Page() {
               className="text-[#c5c5d7] hover:text-[#bcc2ff] font-medium text-sm transition-colors duration-200"
             >
               Tecnologia & Máquinas
+            </button>
+            <button 
+              onClick={() => scrollToSection('ipelab-apresentacao')} 
+              className="text-[#c5c5d7] hover:text-[#bcc2ff] font-medium text-sm transition-colors duration-200"
+            >
+              IPELab
             </button>
             <button 
               onClick={() => scrollToSection('galeria')} 
@@ -577,6 +585,122 @@ export default function Page() {
                 </p>
               </div>
             )}
+          </div>
+        </div>
+      </section>
+
+      {/* IPELab Presentation Section (Conheça o Laboratório) */}
+      <section className="py-20 px-4 md:px-10 bg-[#131313] border-t border-[#454655]/20" id="ipelab-apresentacao">
+        <div className="max-w-7xl mx-auto">
+          <div className="border-b border-[#454655]/30 pb-4 mb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+            <div>
+              <span className="font-mono text-[#b5835a] text-xs font-bold tracking-widest uppercase text-left">EXPLORE O ECOSSISTEMA</span>
+              <h2 className="font-display text-3xl md:text-4xl text-white font-black uppercase mt-1 tracking-tight text-left">
+                Apresentação do IPELab
+              </h2>
+            </div>
+            <p className="font-mono text-xs text-[#8f8fa0] max-w-md md:text-right leading-relaxed">
+              O Laboratório de Ideação, Prototipagem e Empreendedorismo da UFG. Conheça nossas unidades, espaços e tecnologias de fabricação digital.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
+            {/* Slide Image Container */}
+            <div className="lg:col-span-8 bg-[#0e0e0e] border border-[#454655]/40 p-4 hard-shadow-mdf glow-mdf relative flex flex-col justify-center min-h-[400px] group">
+              <div className="absolute top-4 left-4 bg-[#b5835a] text-black font-mono text-[9px] font-bold px-2 py-0.5 uppercase z-20">
+                {([
+                  'Boas-Vindas',
+                  'Infraestrutura',
+                  'Tecnologia'
+                ] as const)[currentSlide]}
+              </div>
+              <div className="absolute top-4 right-4 bg-[#131313] border border-[#454655]/30 text-white font-mono text-[10px] px-2 py-0.5 z-20">
+                {currentSlide + 1} / 3
+              </div>
+
+              {/* Main Image */}
+              <div className="relative w-full overflow-hidden flex-grow flex items-center justify-center bg-[#131313]/30 min-h-[350px]">
+                <img 
+                  alt={
+                    currentSlide === 0 ? 'Sejam Bem-vindos ao IPELab!' :
+                    currentSlide === 1 ? 'Unidades do IPELab' :
+                    'Espaços e Equipamentos'
+                  } 
+                  className="max-w-full max-h-[480px] object-contain transition-all duration-500 transform hover:scale-[1.01]" 
+                  src={
+                    currentSlide === 0 ? '/ipelab-welcome.jpg' :
+                    currentSlide === 1 ? '/ipelab-units.png' :
+                    '/ipelab-spaces.png'
+                  }
+                />
+              </div>
+
+              {/* Navigation Arrows */}
+              <button
+                type="button"
+                onClick={() => setCurrentSlide((prev) => (prev === 0 ? 2 : prev - 1))}
+                className="absolute left-6 top-1/2 -translate-y-1/2 bg-[#0e0e0e]/80 hover:bg-[#b5835a] hover:text-black text-[#b5835a] border border-[#b5835a]/30 p-2.5 transition-all duration-300 cursor-pointer active:scale-95 group-hover:opacity-100 opacity-80 z-20"
+                aria-label="Slide anterior"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setCurrentSlide((prev) => (prev === 2 ? 0 : prev + 1))}
+                className="absolute right-6 top-1/2 -translate-y-1/2 bg-[#0e0e0e]/80 hover:bg-[#b5835a] hover:text-black text-[#b5835a] border border-[#b5835a]/30 p-2.5 transition-all duration-300 cursor-pointer active:scale-95 group-hover:opacity-100 opacity-80 z-20"
+                aria-label="Próximo slide"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Slide Information Panel */}
+            <div className="lg:col-span-4 bg-[#0e0e0e] border border-[#454655]/30 p-8 flex flex-col justify-between space-y-8 hard-shadow-yellow glow-yellow">
+              <div className="space-y-6">
+                <div className="flex items-center gap-2 font-mono text-[10px] text-[#b5835a]">
+                  <span className="w-1.5 h-1.5 bg-[#b5835a] rounded-full animate-ping"></span>
+                  <span>APRESENTAÇÃO VIRTUAL</span>
+                </div>
+                
+                <h3 className="font-display text-2xl text-white font-extrabold uppercase tracking-tight leading-tight">
+                  {currentSlide === 0 ? 'Sejam Bem-vindos ao IPELab!' :
+                   currentSlide === 1 ? 'Unidades do IPELab' :
+                   'Espaços e Equipamentos'}
+                </h3>
+                
+                <p className="font-mono text-xs md:text-sm text-[#c5c5d7] leading-relaxed border-l-2 border-[#b5835a] pl-4 py-1">
+                  {currentSlide === 0 ? 'O IPELab (Laboratório de Ideação, Prototipagem e Empreendedorismo) da UFG é um espaço maker aberto a estudantes, pesquisadores e à comunidade para transformar ideias em projetos reais por meio de tecnologias de fabricação digital.' :
+                   currentSlide === 1 ? 'Com presença multicampi, o IPELab possui unidades distribuídas estrategicamente na Sede (Parque Tecnológico Samambaia), Engenharias (Campus Colemar), Agronomia, Física, Goiás e FCT (Aparecida de Goiânia).' :
+                   'Equipado com o que há de mais moderno em prototipagem: impressoras 3D de filamento e resina, cortadoras a laser, fresadoras CNC, scanners 3D, óculos de realidade virtual (VR), canetas 3D, drones e câmeras 360°.'}
+                </p>
+              </div>
+
+              {/* Dots / Indicators and Auto Slide Control */}
+              <div className="space-y-4 pt-6 border-t border-[#454655]/20">
+                <div className="flex justify-between items-center">
+                  <span className="font-mono text-[9px] text-[#8f8fa0] uppercase tracking-wider">Selecionar Slide</span>
+                  <div className="flex gap-2">
+                    {[0, 1, 2].map((idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => setCurrentSlide(idx)}
+                        className={`w-2.5 h-2.5 transition-all duration-300 cursor-pointer rounded-none ${
+                          currentSlide === idx 
+                            ? 'bg-[#b5835a] w-6' 
+                            : 'bg-[#454655] hover:bg-[#b5835a]/50'
+                        }`}
+                        aria-label={`Ir para slide ${idx + 1}`}
+                      />
+                    ))}
+                  </div>
+                </div>
+                <div className="text-[10px] font-mono text-[#8f8fa0] leading-normal pt-2">
+                  * Utilize os botões laterais da imagem ou clique nos indicadores acima para navegar.
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </section>
