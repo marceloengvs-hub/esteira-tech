@@ -1323,14 +1323,6 @@ export default function Page() {
                           key={lead.id} 
                           className="p-4 bg-[#0e0e0e] border border-[#454655]/30 relative group hover:border-[#b5835a] transition-all"
                         >
-                          <button 
-                            onClick={() => handleRemoveLead(lead.id)}
-                            className="absolute top-2 right-2 text-[#8f8fa0] hover:text-[#ffb3ad] p-1 transition-colors cursor-pointer"
-                            title="Remover inscrição"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
-
                           <div className="flex items-center gap-1.5 text-[10px] text-[#b5835a] font-bold mb-1">
                             <BookmarkCheck className="w-3 h-3" />
                             <span>{lead.affiliation.toUpperCase()}</span>
