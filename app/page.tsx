@@ -1341,27 +1341,6 @@ export default function Page() {
                     )}
                   </div>
                 </div>
-
-                {leads.length > 0 && (
-                  <button 
-                    onClick={async () => {
-                      if (confirm(dbConnected ? "Deseja realmente limpar as inscrições salvas no Firebase e localmente?" : "Deseja realmente limpar as inscrições salvas localmente?")) {
-                        if (dbConnected) {
-                          for (const lead of leads) {
-                            await removeLead(lead.id);
-                          }
-                        } else {
-                          clearLocalLeads();
-                        }
-                        setLeads([]);
-                      }
-                    }}
-                    className="mt-6 text-[10px] text-[#8f8fa0] hover:text-white uppercase flex items-center gap-1.5 font-bold transition-colors cursor-pointer self-start"
-                  >
-                    <Trash2 className="w-3 h-3" />
-                    RESTAURAR BANCO DE DADOS DE LEADS
-                  </button>
-                )}
               </div>
             </div>
           </div>
