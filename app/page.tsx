@@ -1182,12 +1182,12 @@ export default function Page() {
                       <span className="text-white">R$ {printFilamentCost.toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between text-[#8f8fa0] border-b border-[#454655]/10 pb-1">
-                      <span>Custo de Energia:</span>
-                      <span className="text-white">R$ {printEnergyCost.toFixed(2)}</span>
+                      <span>Energia (c/ Falha/Indiretos):</span>
+                      <span className="text-white">R$ {(printEnergyCost * 1.15 * 1.20).toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between text-[#8f8fa0] border-b border-[#454655]/10 pb-1">
-                      <span>Depreciação Máquina (ROI):</span>
-                      <span className="text-white">R$ {printRoiCost.toFixed(2)}</span>
+                      <span>Depreciação Máquina (ROI c/ Falha/Indiretos):</span>
+                      <span className="text-white">R$ {(printRoiCost * 1.15 * 1.20).toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between text-[#8f8fa0] border-b border-[#454655]/10 pb-1">
                       <span>Custo Administrativo (Setup+Tempo):</span>
