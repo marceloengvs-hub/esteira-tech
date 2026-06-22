@@ -96,6 +96,7 @@ export default function Page() {
 
   // Simulador de Custos - Impressão 3D
   const [printMaterial, setPrintMaterial] = React.useState<'PLA' | 'PETG' | 'ABS'>('PLA');
+  const [printPrinter, setPrintPrinter] = React.useState<'K1' | 'K1_MAX'>('K1_MAX');
   const [printHours, setPrintHours] = React.useState<number | ''>('');
   const [printMinutes, setPrintMinutes] = React.useState<number | ''>('');
   const [filamentMetres, setFilamentMetres] = React.useState<number | ''>('');
@@ -103,31 +104,65 @@ export default function Page() {
   const [projectType, setProjectType] = React.useState<'ENSINO' | 'PESQUISA'>('ENSINO');
   const [currentSlide, setCurrentSlide] = React.useState<number>(0);
 
-  // Cálculos de Custos Dinâmicos
-  const PRECO_METRO: Record<'PLA' | 'PETG' | 'ABS', number> = {
-    ABS: 1.0 / 3.0,
-    PLA: 0.50,
-    PETG: 3.5 / 6.0
-  };
-
+  // Cálculos de Custos Dinâmicos - Impressão 3D e Laser/MDF
   const mdfArea = (mdfWidth / 100) * (mdfHeight / 100);
   const mdfCost = mdfArea * mdfPricePerM2;
 
   const laserCutCost = (laserCutTime === '' ? 0 : laserCutTime) * laserCutPricePerMin;
   const laserEngraveCost = (laserEngraveTime === '' ? 0 : laserEngraveTime) * laserEngravePricePerMin;
 
+  // Constantes da Planilha
+  const DIAMETER_3D = 1.75; // mm
+  const FILAMENT_PRICE_PER_KG = 110; // R$
+  const KWH_PRICE_3D = 0.4859; // R$
+  const MACHINE_POWER_3D = 220; // Watts
+  const FAILURE_RATE_3D = 0.15; // 15%
+  const ADMIN_RATE_3D = 3.00; // R$
+
+  const MACHINE_VALUES_3D = {
+    K1: 5500,
+    K1_MAX: 6000
+  };
+
+  const MATERIAL_DENSITIES_3D = {
+    ABS: 1.04,
+    PLA: 1.24,
+    PETG: 1.27
+  };
+
+  // Tempo total de impressão
   const totalPrintHours = (printHours === '' ? 0 : printHours) + (printMinutes === '' ? 0 : printMinutes) / 60;
   const metersVal = filamentMetres === '' ? 0 : filamentMetres;
-  
-  const precoMetro = PRECO_METRO[printMaterial];
-  const custoMaterial = metersVal * precoMetro;
 
-  // A taxa fixa de setup de R$ 14,00 cobre os primeiros 30 minutos (0.5h) de máquina
-  const horasExcedentes = Math.max(0, totalPrintHours - 0.5);
-  const custoTempo = horasExcedentes * 10.00; // R$ 10,00 por hora excedente
-  const valorCheio = 14.00 + custoTempo + custoMaterial;
-  
-  const printCostPerPiece = valorCheio * (projectType === 'PESQUISA' ? 0.5 : 1.0);
+  // Cálculo físico do peso em gramas
+  const lengthMm = metersVal * 1000;
+  const radiusMm = DIAMETER_3D / 2;
+  const areaMm2 = Math.PI * Math.pow(radiusMm, 2);
+  const volumeCm3 = (areaMm2 * lengthMm) / 1000;
+  const density = MATERIAL_DENSITIES_3D[printMaterial];
+  const weightGrams = volumeCm3 * density;
+
+  // Custo de Filamento
+  const printFilamentCost = weightGrams * (FILAMENT_PRICE_PER_KG / 1000);
+
+  // Custo de Energia
+  const printEnergyCost = (MACHINE_POWER_3D / 1000) * totalPrintHours * KWH_PRICE_3D;
+
+  // Custo de ROI/Depreciação
+  const machineValue = MACHINE_VALUES_3D[printPrinter];
+  const roiHours = 12 * 20 * 8; // 1920 horas (12 meses, 20 dias, 8 horas)
+  const roiRatePerHour = machineValue / roiHours;
+  const printRoiCost = roiRatePerHour * totalPrintHours;
+
+  // Custo Administrativo (1 hora de setup + horas de impressão)
+  const printAdminCost = ADMIN_RATE_3D * (1 + totalPrintHours);
+
+  // Fórmula de Produção da Planilha:
+  // Custo = Filamento + (Energia + Depreciação) * 1.15 (falha) * 1.20 (indiretos) + Custo Administrativo
+  const printProductionCostRaw = printFilamentCost + (printEnergyCost + printRoiCost) * (1 + FAILURE_RATE_3D) * 1.20 + printAdminCost;
+
+  // Custo por peça (com desconto para pesquisa de 50%, se aplicável)
+  const printCostPerPiece = printProductionCostRaw * (projectType === 'PESQUISA' ? 0.5 : 1.0);
   const totalPrintCost = printCostPerPiece * printQuantity;
 
   const estimatedTotalCost = mdfCost + laserCutCost + laserEngraveCost + totalPrintCost;
@@ -141,6 +176,7 @@ export default function Page() {
     setLaserEngraveTime('');
     setLaserEngravePricePerMin(2.5);
     setPrintMaterial('PLA');
+    setPrintPrinter('K1_MAX');
     setPrintHours('');
     setPrintMinutes('');
     setFilamentMetres('');
@@ -1001,24 +1037,48 @@ export default function Page() {
                   </h3>
                 </div>
 
-                {/* Material / Polymer Selector */}
-                <div className="p-5 bg-[#131313] border border-[#454655]/20 mb-6 rounded-none">
-                  <h4 className="font-mono text-xs font-bold text-white uppercase tracking-wider mb-3">Material / Polímero</h4>
-                  <div className="grid grid-cols-3 gap-2">
-                    {(['ABS', 'PLA', 'PETG'] as const).map((mat) => (
-                      <button
-                        key={mat}
-                        type="button"
-                        onClick={() => setPrintMaterial(mat)}
-                        className={`py-2 text-xs font-mono font-bold border transition-all cursor-pointer ${
-                          printMaterial === mat
-                            ? 'bg-[#b8af00] text-black border-[#b8af00]'
-                            : 'bg-transparent text-[#d5cb00] border-[#b8af00]/40 hover:border-[#b8af00]'
-                        }`}
-                      >
-                        {mat}
-                      </button>
-                    ))}
+                {/* Material Selector & Printer Selector */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                  {/* Material / Polymer Selector */}
+                  <div className="p-4 bg-[#131313] border border-[#454655]/20 rounded-none">
+                    <h4 className="font-mono text-xs font-bold text-white uppercase tracking-wider mb-2.5">Material / Polímero</h4>
+                    <div className="grid grid-cols-3 gap-2">
+                      {(['ABS', 'PLA', 'PETG'] as const).map((mat) => (
+                        <button
+                          key={mat}
+                          type="button"
+                          onClick={() => setPrintMaterial(mat)}
+                          className={`py-2 text-[10px] font-mono font-bold border transition-all cursor-pointer ${
+                            printMaterial === mat
+                              ? 'bg-[#b8af00] text-black border-[#b8af00]'
+                              : 'bg-transparent text-[#d5cb00] border-[#b8af00]/40 hover:border-[#b8af00]'
+                          }`}
+                        >
+                          {mat}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Printer / Machine Selector */}
+                  <div className="p-4 bg-[#131313] border border-[#454655]/20 rounded-none">
+                    <h4 className="font-mono text-xs font-bold text-white uppercase tracking-wider mb-2.5">Impressora (ROI)</h4>
+                    <div className="grid grid-cols-2 gap-2">
+                      {(['K1', 'K1_MAX'] as const).map((printer) => (
+                        <button
+                          key={printer}
+                          type="button"
+                          onClick={() => setPrintPrinter(printer)}
+                          className={`py-2 text-[10px] font-mono font-bold border transition-all cursor-pointer ${
+                            printPrinter === printer
+                              ? 'bg-[#b8af00] text-black border-[#b8af00]'
+                              : 'bg-transparent text-[#d5cb00] border-[#b8af00]/40 hover:border-[#b8af00]'
+                          }`}
+                        >
+                          {printer === 'K1' ? 'Creality K1' : 'K1 Max'}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </div>
 
@@ -1087,10 +1147,7 @@ export default function Page() {
                   </div>
 
                   <div className="text-[9px] text-[#8f8fa0] font-mono leading-tight">
-                    Fórmula: Setup R$ 14,00 (cobre os primeiros 30 min) + R$ 10,00/h excedente + Insumo ({
-                      printMaterial === 'ABS' ? 'R$ 0,33/m' :
-                      printMaterial === 'PLA' ? 'R$ 0,50/m' : 'R$ 0,58/m'
-                    })
+                    Fórmula Planilha: Insumo (Peso em gramas) + (Energia + Depreciação ROI) * 1.15 * 1.20 + Admin (1h setup + tempo). Diária: R$ 3,00/h.
                   </div>
 
                   <div className="grid grid-cols-2 gap-4 font-mono text-[10px] pt-2 border-t border-[#454655]/10">
@@ -1118,12 +1175,35 @@ export default function Page() {
                     </div>
                   </div>
 
-                  <div className="flex justify-between items-center font-mono text-[10px] pt-2 border-t border-[#454655]/10">
-                    <div className="text-[#8f8fa0]">
-                      Custo por peça: <strong className="text-white">R$ {printCostPerPiece.toFixed(2)}</strong>
+                  {/* Quebra Detalhada de Custos (Conforme Planilha) */}
+                  <div className="mt-4 p-4 bg-[#0e0e0e] border border-[#454655]/20 font-mono text-[10px] space-y-2">
+                    <div className="flex justify-between text-[#8f8fa0] border-b border-[#454655]/10 pb-1">
+                      <span>Custo de Filamento ({weightGrams.toFixed(1)}g):</span>
+                      <span className="text-white">R$ {printFilamentCost.toFixed(2)}</span>
                     </div>
-                    <div className="text-[#8f8fa0]">
-                      Subtotal: <strong className="text-white">R$ {totalPrintCost.toFixed(2)}</strong>
+                    <div className="flex justify-between text-[#8f8fa0] border-b border-[#454655]/10 pb-1">
+                      <span>Custo de Energia:</span>
+                      <span className="text-white">R$ {printEnergyCost.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between text-[#8f8fa0] border-b border-[#454655]/10 pb-1">
+                      <span>Depreciação Máquina (ROI):</span>
+                      <span className="text-white">R$ {printRoiCost.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between text-[#8f8fa0] border-b border-[#454655]/10 pb-1">
+                      <span>Custo Administrativo (Setup+Tempo):</span>
+                      <span className="text-white">R$ {printAdminCost.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between text-[#d5cb00] font-bold border-b border-[#454655]/20 pb-1 pt-1">
+                      <span>VALOR DE PRODUÇÃO {projectType === 'PESQUISA' ? '(Pesquisa -50%)' : '(Peça)'}:</span>
+                      <span>R$ {printCostPerPiece.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between text-[#00ffcc] font-bold border-b border-[#454655]/20 pb-1">
+                      <span>VALOR DE VENDA SUGERIDO:</span>
+                      <span>R$ {(printCostPerPiece * 2).toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between text-[#ff9900] font-bold">
+                      <span>LUCRO ESTIMADO (100%):</span>
+                      <span>R$ {printCostPerPiece.toFixed(2)}</span>
                     </div>
                   </div>
                 </div>
