@@ -165,7 +165,7 @@ export default function Page() {
   const printCostPerPiece = printProductionCostRaw * (projectType === 'PESQUISA' ? 0.5 : 1.0);
   const totalPrintCost = printCostPerPiece * printQuantity;
 
-  const estimatedTotalCost = mdfCost + laserCutCost + laserEngraveCost + totalPrintCost;
+  const estimatedTotalCost = mdfCost + laserCutCost + laserEngraveCost + (totalPrintCost * 2);
 
   const handleResetSimulation = () => {
     setMdfWidth(32);
@@ -1220,7 +1220,7 @@ export default function Page() {
               </div>
               <div>
                 <h4 className="font-display text-white font-bold uppercase text-sm tracking-wider">Custo Total Estimado</h4>
-                <p className="font-mono text-xs text-[#8f8fa0] mt-0.5">Soma da estrutura, usinagem laser e polimerização 3D</p>
+                <p className="font-mono text-xs text-[#8f8fa0] mt-0.5">Soma da estrutura, usinagem laser e valor de venda da impressão 3D</p>
               </div>
             </div>
             <div className="flex items-center gap-6 self-stretch md:self-auto justify-between md:justify-end w-full md:w-auto">
