@@ -453,7 +453,7 @@ export default function Page() {
           </h1>
           
           <p className="font-mono text-sm md:text-base text-[#c5c5d7] mb-10 max-w-2xl border-l-[3px] border-[#b5835a] pl-5 leading-relaxed">
-            Unindo a excelência do <span className="text-[#ffffff] font-bold">IPElab UFG</span> em fabricação digital com design industrial sofisticado para projetar e fabricar acessórios premium com acabamento em <span className="text-[#b5835a] font-bold">MDF Cru</span> e polímeros de alta velocidade <span className="text-white">Branco ABS</span>.
+            Unindo a excelência do <span className="text-[#ffffff] font-bold">IPElab UFG</span> em fabricação digital com design industrial sofisticado para projetar e fabricar acessórios premium com acabamento em <span className="text-[#b5835a] font-bold">MDF Cru</span> e polímeros de alta velocidade <span className="text-white">Branco e Cinza ABS</span>.
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mt-8">
@@ -526,7 +526,7 @@ export default function Page() {
                 </div>
                 <h3 className="font-display text-xl text-white font-bold mb-3 uppercase tracking-tight">Impressão 3D</h3>
                 <p className="font-mono text-xs text-[#c5c5d7] leading-relaxed mb-4">
-                  Fabricação em polímero termoplástico termorresistente de alta rigidez estrutural. Prototipagem com suporte para polímero <strong className="text-white">Branco ABS</strong> de filamento e PLA Premium, validando ergonomias perfeitas.
+                  Fabricação em polímero termoplástico termorresistente de alta rigidez estrutural. Prototipagem com suporte para polímero <strong className="text-white">Branco e Cinza ABS</strong> de filamento e PLA Premium, validando ergonomias perfeitas.
                 </p>
               </div>
               <div className="font-mono text-[11px] text-[#d5cb00] border-t border-[#454655]/20 pt-3 flex items-center gap-1.5 mt-4">
@@ -651,7 +651,7 @@ export default function Page() {
                       <h4 className="text-white font-bold uppercase text-xs tracking-wider mb-2 border-b border-[#454655]/10 pb-1">Especificações Maker</h4>
                       <div className="p-3 bg-[#131313] border border-[#454655]/20">
                         <span className="text-[#8f8fa0] block text-[9px]">MATERIAIS DO OFICINA:</span>
-                        <span className="text-[#bcc2ff] font-bold text-xs">Filamento Branco ABS, PETG e PLA Premium</span>
+                        <span className="text-[#bcc2ff] font-bold text-xs">Filamento Branco e Cinza ABS, PETG e PLA Premium</span>
                       </div>
                       <div className="p-3 bg-[#131313] border border-[#454655]/20">
                         <span className="text-[#8f8fa0] block text-[9px]">SISTEMA DE NIVELAMENTO:</span>
