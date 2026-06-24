@@ -6,12 +6,18 @@
   --color-mdf-cru: #b5835a;
   --color-industrial-dark: #0e0e0e;
   --color-industrial-surface: #131313;
-  --color-primary-blue: #bcc2ff;
-  --color-primary-blue-container: #2e41d1;
-  --color-accent-yellow: #d5cb00;
-  --color-accent-yellow-container: #b8af00;
-  --color-accent-red: #ffb3ad;
-  --color-accent-red-container: #bf031c;
+  
+  /* Azul Royal (do logo do IPELab) */
+  --color-primary-blue: #8fa1ff;
+  --color-primary-blue-container: #0039a6;
+  
+  /* Amarelo Ouro (do logo do IPELab) */
+  --color-accent-yellow: #f2dc1d;
+  --color-accent-yellow-container: #c4ae00;
+  
+  /* Turquesa/Ciano (do logo do IPELab - substituindo o vermelho) */
+  --color-accent-red: #80f3ff;
+  --color-accent-red-container: #00a2b5;
 }
 
 .font-display {
@@ -24,7 +30,7 @@
 
 @layer utilities {
   .tech-mesh {
-    background-image: radial-gradient(circle at 2px 2px, rgba(188, 194, 255, 0.04) 1px, transparent 0);
+    background-image: radial-gradient(circle at 2px 2px, rgba(128, 243, 255, 0.04) 1px, transparent 0);
     background-size: 24px 24px;
   }
 }
@@ -34,15 +40,15 @@
 }
 
 .hard-shadow-blue {
-  box-shadow: 4px 4px 0px 0px #2e41d1;
+  box-shadow: 4px 4px 0px 0px var(--color-primary-blue-container);
 }
 
 .hard-shadow-yellow {
-  box-shadow: 4px 4px 0px 0px #b8af00;
+  box-shadow: 4px 4px 0px 0px var(--color-accent-yellow-container);
 }
 
 .hard-shadow-red {
-  box-shadow: 4px 4px 0px 0px #bf031c;
+  box-shadow: 4px 4px 0px 0px var(--color-accent-red-container);
 }
 
 .hard-shadow-mdf {
@@ -58,8 +64,8 @@
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .glow-blue:hover {
-  box-shadow: 0 0 24px 2px rgba(46, 65, 209, 0.35);
-  border-color: rgba(188, 194, 255, 0.6) !important;
+  box-shadow: 0 0 24px 2px rgba(0, 57, 166, 0.4);
+  border-color: var(--color-primary-blue) !important;
   transform: translateY(-2px);
 }
 
@@ -67,8 +73,8 @@
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .glow-yellow:hover {
-  box-shadow: 0 0 24px 2px rgba(184, 175, 0, 0.35);
-  border-color: rgba(213, 203, 0, 0.6) !important;
+  box-shadow: 0 0 24px 2px rgba(196, 174, 0, 0.4);
+  border-color: var(--color-accent-yellow) !important;
   transform: translateY(-2px);
 }
 
@@ -76,8 +82,8 @@
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .glow-red:hover {
-  box-shadow: 0 0 24px 2px rgba(191, 3, 28, 0.35);
-  border-color: rgba(255, 179, 173, 0.6) !important;
+  box-shadow: 0 0 24px 2px rgba(0, 162, 181, 0.4);
+  border-color: var(--color-accent-red) !important;
   transform: translateY(-2px);
 }
 
@@ -99,8 +105,8 @@
   position: absolute;
   width: 100%;
   height: 2px;
-  background: linear-gradient(to right, transparent, #bcc2ff, transparent);
-  opacity: 0.1;
+  background: linear-gradient(to right, transparent, var(--color-primary-blue), transparent);
+  opacity: 0.15;
   animation: scanline 8s linear infinite;
 }
 
