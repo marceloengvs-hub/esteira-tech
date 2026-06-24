@@ -15,9 +15,9 @@
   --color-accent-yellow: #f2dc1d;
   --color-accent-yellow-container: #c4ae00;
   
-  /* Turquesa/Ciano (do logo do IPELab - substituindo o vermelho) */
-  --color-accent-red: #80f3ff;
-  --color-accent-red-container: #00a2b5;
+  /* Vermelho (do logo do IPELab) */
+  --color-accent-red: #ffb3ad;
+  --color-accent-red-container: #bf031c;
 }
 
 .font-display {
@@ -30,7 +30,7 @@
 
 @layer utilities {
   .tech-mesh {
-    background-image: radial-gradient(circle at 2px 2px, rgba(128, 243, 255, 0.04) 1px, transparent 0);
+    background-image: radial-gradient(circle at 2px 2px, rgba(188, 194, 255, 0.04) 1px, transparent 0);
     background-size: 24px 24px;
   }
 }
@@ -82,7 +82,7 @@
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .glow-red:hover {
-  box-shadow: 0 0 24px 2px rgba(0, 162, 181, 0.4);
+  box-shadow: 0 0 24px 2px rgba(191, 3, 28, 0.4);
   border-color: var(--color-accent-red) !important;
   transform: translateY(-2px);
 }
