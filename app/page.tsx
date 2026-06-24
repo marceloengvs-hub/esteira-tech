@@ -25,15 +25,6 @@ import {
   Info
 } from 'lucide-react';
 
-import { 
-  Lead, 
-  getLeads, 
-  addLead, 
-  removeLead, 
-  isFirebaseActive, 
-  clearLocalLeads 
-} from '../lib/dbService';
-
 // =========================================================================
 // CONFIGURAÇÃO DE IMAGENS DO PROJETO:
 // As imagens locais são importadas no topo deste arquivo:
@@ -50,38 +41,11 @@ if (typeof window !== 'undefined') {
   });
 }
 
-const DEFAULT_LEADS: Lead[] = [
-  {
-    id: 'lead-1',
-    name: 'Ana Júlia Silva',
-    email: 'anajulia.silva@discente.ufg.br',
-    phone: '(62) 98112-4455',
-    affiliation: 'Estudante UFG',
-    timestamp: '16/06/2026 10:15',
-    equipment: 'Creality K1 Max',
-  },
-  {
-    id: 'lead-2',
-    name: 'Prof. Carlos Eduardo',
-    email: 'carloseduardo@ufg.br',
-    phone: '(62) 99223-1100',
-    affiliation: 'Servidor/Docente UFG',
-    timestamp: '16/06/2026 09:30',
-    equipment: 'Duplotech 1080',
-  }
-];
-
 export default function Page() {
-  const [leads, setLeads] = React.useState<Lead[]>(DEFAULT_LEADS);
-  const [name, setName] = React.useState('');
-  const [email, setEmail] = React.useState('');
-  const [phone, setPhone] = React.useState('');
-  const [affiliation, setAffiliation] = React.useState('Estudante UFG');
-  const [selectedEquipment, setSelectedEquipment] = React.useState('Creality K1 Max');
-  const [submitSuccess, setSubmitSuccess] = React.useState(false);
   const [activeTab, setActiveTab] = React.useState('inicio');
   const [selectedSpec, setSelectedSpec] = React.useState<'k1' | 'duplotech'>('k1');
-  const [dbConnected, setDbConnected] = React.useState(false);
+  const [qrModalOpen, setQrModalOpen] = React.useState(false);
+  const [currentUrl, setCurrentUrl] = React.useState('');
 
   // Simulador de Custos - MDF e Laser
   const [mdfWidth, setMdfWidth] = React.useState<number>(32);
@@ -184,62 +148,11 @@ export default function Page() {
     setProjectType('ENSINO');
   };
 
-  // Load leads and check connection on client mount
   React.useEffect(() => {
-    const loadLeadsData = async () => {
-      const active = isFirebaseActive();
-      setDbConnected(active);
-      const data = await getLeads();
-      setLeads(data);
-    };
-    loadLeadsData();
+    if (typeof window !== 'undefined') {
+      setCurrentUrl(window.location.href);
+    }
   }, []);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!name || !email || !phone) return;
-
-    const newLead: Lead = {
-      id: `lead-${Date.now()}`,
-      name,
-      email,
-      phone,
-      affiliation,
-      timestamp: new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }).substring(0, 16),
-      equipment: selectedEquipment
-    };
-
-    try {
-      await addLead(newLead);
-      const data = await getLeads();
-      setLeads(data);
-
-      // Reset form & show feedback
-      setName('');
-      setEmail('');
-      setPhone('');
-      setSubmitSuccess(true);
-      setTimeout(() => setSubmitSuccess(false), 5000);
-
-      // Scroll to visualization of leads or top
-      const logSection = document.getElementById('registered-leads');
-      if (logSection) {
-        logSection.scrollIntoView({ behavior: 'smooth' });
-      }
-    } catch (err) {
-      console.error('Erro ao adicionar inscrição:', err);
-    }
-  };
-
-  const handleRemoveLead = async (id: string) => {
-    try {
-      await removeLead(id);
-      const data = await getLeads();
-      setLeads(data);
-    } catch (err) {
-      console.error('Erro ao remover inscrição:', err);
-    }
-  };
 
   const scrollToSection = (id: string) => {
     const el = document.getElementById(id);
@@ -268,49 +181,49 @@ export default function Page() {
           <div className="hidden md:flex gap-8 items-center font-mono">
             <button 
               onClick={() => scrollToSection('processo')} 
-              className="text-[#c5c5d7] hover:text-[#bcc2ff] font-medium text-sm transition-colors duration-200"
+              className="text-[#c5c5d7] hover:text-[#bcc2ff] font-medium text-sm transition-colors duration-200 cursor-pointer"
             >
               Processo
             </button>
             <button 
               onClick={() => scrollToSection('maquinas-maker')} 
-              className="text-[#c5c5d7] hover:text-[#bcc2ff] font-medium text-sm transition-colors duration-200"
+              className="text-[#c5c5d7] hover:text-[#bcc2ff] font-medium text-sm transition-colors duration-200 cursor-pointer"
             >
               Tecnologia & Máquinas
             </button>
             <button 
               onClick={() => scrollToSection('ipelab-apresentacao')} 
-              className="text-[#c5c5d7] hover:text-[#bcc2ff] font-medium text-sm transition-colors duration-200"
+              className="text-[#c5c5d7] hover:text-[#bcc2ff] font-medium text-sm transition-colors duration-200 cursor-pointer"
             >
               IPELab
             </button>
             <button 
               onClick={() => scrollToSection('galeria')} 
-              className="text-[#c5c5d7] hover:text-[#bcc2ff] font-medium text-sm transition-colors duration-200"
+              className="text-[#c5c5d7] hover:text-[#bcc2ff] font-medium text-sm transition-colors duration-200 cursor-pointer"
             >
               Galeria
             </button>
             <button 
               onClick={() => scrollToSection('simulador-custos')} 
-              className="text-[#c5c5d7] hover:text-[#bcc2ff] font-medium text-sm transition-colors duration-200"
+              className="text-[#c5c5d7] hover:text-[#bcc2ff] font-medium text-sm transition-colors duration-200 cursor-pointer"
             >
               Simulador
             </button>
             <button 
-              onClick={() => scrollToSection('inscricao')} 
-              className="text-[#b5835a] hover:text-white font-medium text-sm transition-colors duration-200 flex items-center gap-1.5"
+              onClick={() => setQrModalOpen(true)} 
+              className="text-[#bcc2ff] hover:text-white font-medium text-sm transition-colors duration-200 flex items-center gap-1.5 cursor-pointer"
             >
-              <Sparkles className="w-3.5 h-3.5 text-[#b5835a]" />
-              Inscrição Oficina
+              <Sparkles className="w-3.5 h-3.5 text-[#bcc2ff]" />
+              QR Code Aula
             </button>
           </div>
 
           <button 
-            onClick={() => scrollToSection('inscricao')}
-            className="bg-[#2e41d1] text-white hover:bg-[#3a4cdb] px-6 py-2.5 font-mono text-xs font-bold tracking-wider active:scale-95 transition-transform border border-[#bcc2ff]/10 uppercase"
+            onClick={() => scrollToSection('simulador-custos')}
+            className="bg-[#2e41d1] text-white hover:bg-[#3a4cdb] px-6 py-2.5 font-mono text-xs font-bold tracking-wider active:scale-95 transition-transform border border-[#bcc2ff]/10 uppercase cursor-pointer"
             id="nav-encomendar"
           >
-            ENCOMENDAR / PARTICIPAR
+            SIMULAR CUSTOS
           </button>
         </div>
       </nav>
@@ -444,7 +357,7 @@ export default function Page() {
         <div className="relative z-20 max-w-4xl mx-auto w-full mt-auto">
           <div className="inline-flex items-center gap-2 bg-[#b5835a] text-white font-mono text-xs px-4 py-1.5 mb-6 milled-edge uppercase tracking-wider font-bold">
             <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span>
-            PRECISION FABRICATION v2.4 | IPELAB UFG
+            FABRICAÇÃO DE PRECISÃO v2.4 | IPELAB UFG
           </div>
           
           <h1 className="font-display text-4xl md:text-6xl text-[#ffffff] mb-6 uppercase tracking-tight font-extrabold leading-[1.1]">
@@ -456,7 +369,7 @@ export default function Page() {
             Unindo a excelência do <span className="text-[#ffffff] font-bold">IPElab UFG</span> em fabricação digital com design industrial sofisticado para projetar e fabricar acessórios premium com acabamento em <span className="text-[#b5835a] font-bold">MDF Cru</span> e polímeros de alta velocidade <span className="text-white">Branco e Cinza ABS</span>.
           </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mt-8">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-4xl mt-8">
             <button 
               onClick={() => scrollToSection('processo')}
               className="w-full bg-[#2e41d1] hover:bg-[#3a4cdb] text-white py-4 px-6 font-mono font-bold tracking-wider text-center milled-edge active:scale-[0.98] transition-all uppercase text-sm border border-[#bcc2ff]/20 cursor-pointer shadow-md shadow-[#2e41d1]/10"
@@ -467,7 +380,14 @@ export default function Page() {
               onClick={() => scrollToSection('maquinas-maker')}
               className="w-full border-2 border-[#b5835a] text-[#b5835a] hover:bg-[#b5835a] hover:text-white py-[14px] px-6 font-mono font-bold tracking-wider text-center active:scale-[0.98] transition-all uppercase text-sm cursor-pointer shadow-md shadow-[#b5835a]/10"
             >
-              EXPLORAR MATERIAIS & MAQUINÁRIO
+              EXPLORAR MATERIAIS & MÁQUINAS
+            </button>
+            <button 
+              onClick={() => setQrModalOpen(true)}
+              className="w-full bg-[#d5cb00] hover:bg-yellow-400 text-black py-[14px] px-6 font-mono font-bold tracking-wider text-center active:scale-[0.98] transition-all uppercase text-sm cursor-pointer shadow-md shadow-[#d5cb00]/10 flex items-center justify-center gap-1.5"
+            >
+              <Sparkles className="w-4 h-4 text-black" />
+              QR CODE DA SALA
             </button>
           </div>
         </div>
@@ -477,7 +397,7 @@ export default function Page() {
       <section className="bg-[#b5835a]/10 border-b border-[#b5835a]/30 py-4 px-4 font-mono text-center">
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-center gap-3 text-[#e5e2e1] text-xs md:text-sm">
           <Info className="w-5 h-5 text-[#b5835a] flex-shrink-0" />
-          <span>🚀 <strong className="text-white font-bold">Inscrições Abertas:</strong> Próxima turma de fabricação digital com as super impressoras <strong className="text-white">Creality K1</strong> e corte laser <strong className="text-white">Duplotech 1080</strong> no IPElab da UFG campus Samambaia!</span>
+          <span>🚀 <strong className="text-white font-bold">Oficina em Andamento:</strong> Protótipos físicos com as super impressoras <strong className="text-white">Creality K1 Max</strong> e corte laser <strong className="text-white">Duplotech 1080</strong> no IPElab da UFG!</span>
         </div>
       </section>
 
@@ -486,7 +406,7 @@ export default function Page() {
         <div className="max-w-7xl mx-auto">
           <div className="mb-12 border-b border-[#454655]/20 pb-6 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
             <div>
-              <span className="font-mono text-xs uppercase tracking-widest text-[#d5cb00] font-bold">PIPINES DE TECNOLOGIA</span>
+              <span className="font-mono text-xs uppercase tracking-widest text-[#d5cb00] font-bold">STACK DE TECNOLOGIA</span>
               <h2 className="font-display text-3xl md:text-4xl text-white font-bold uppercase mt-1 tracking-tight">
                 INFRAESTRUTURA TÉCNICA
               </h2>
@@ -555,6 +475,29 @@ export default function Page() {
               </div>
             </div>
           </div>
+
+          {/* Seção de Material de Apoio da Oficina */}
+          <div className="mt-12 bg-[#131313] border border-[#b5835a]/30 p-8 hard-shadow-mdf glow-mdf flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-[#b5835a]/10 border border-[#b5835a]/30 shrink-0">
+                <BookmarkCheck className="text-[#b5835a] w-8 h-8" />
+              </div>
+              <div>
+                <h3 className="font-display text-xl text-white font-bold uppercase tracking-tight">Material de Apoio da Oficina</h3>
+                <p className="font-mono text-xs text-[#c5c5d7] mt-1.5 max-w-xl">
+                  Baixe o vetor DXF oficial da oficina para realizar o corte e a gravação na máquina a laser e acompanhar a montagem física da Esteira Tech.
+                </p>
+              </div>
+            </div>
+            <a 
+              href="/UFG.dxf" 
+              download="UFG.dxf"
+              className="bg-[#b5835a] hover:bg-[#c39167] text-white py-4 px-8 font-mono font-bold tracking-wider text-center active:scale-[0.98] transition-all uppercase text-sm border border-white/10 shrink-0 cursor-pointer text-decoration-none inline-block"
+            >
+              Baixar Gabarito DXF (UFG.dxf)
+            </a>
+          </div>
+
         </div>
       </section>
 
@@ -1240,194 +1183,6 @@ export default function Page() {
         </div>
       </section>
 
-      {/* Oficina Registration / Capture Form (Formulário de Captura) */}
-      <section className="py-20 px-4 md:px-10 bg-[#0e0e0e] relative" id="inscricao">
-        <div className="max-w-6xl mx-auto">
-          
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
-            {/* Form Side */}
-            <div className="h-full">
-              <div className="p-8 bg-[#131313] border-2 border-[#b5835a] hard-shadow-mdf glow-mdf h-full flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-10 h-10 bg-[#b5835a]/10 flex items-center justify-center border border-[#b5835a]/30">
-                      <ClipboardCheck className="text-[#b5835a] w-5 h-5" />
-                    </div>
-                    <div>
-                      <h3 className="font-display text-lg text-white font-extrabold uppercase tracking-tight">
-                        Oficina Esteira Tech
-                      </h3>
-                      <p className="font-mono text-[10px] text-[#b5835a]">IPELAB UFG CAMPUS CO-WORKING</p>
-                    </div>
-                  </div>
-
-                  <p className="font-mono text-xs text-[#c5c5d7] mb-6 leading-relaxed">
-                    Inscreva-se abaixo para reservar sua vaga individual gratuita no laboratório e obter certificação oficial da Universidade Federal de Goiás.
-                  </p>
-
-                  <form onSubmit={handleSubmit} className="space-y-4 font-mono text-xs" id="leads-form">
-                    <div>
-                      <label className="block text-[#e5e2e1] uppercase tracking-wider mb-1.5 font-bold">
-                        Nome Completo *
-                      </label>
-                      <input 
-                        type="text" 
-                        required
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        placeholder="Ex: Marcelo Silva Santos"
-                        className="w-full bg-[#0e0e0e] border border-[#454655]/50 px-4 py-3 text-white focus:outline-none focus:border-[#b5835a] transition-all font-mono placeholder-[#8f8fa0]"
-                        id="form-name"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-[#e5e2e1] uppercase tracking-wider mb-1.5 font-bold">
-                        E-mail *
-                      </label>
-                      <input 
-                        type="email" 
-                        required
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="Ex: marcelosilva@discente.ufg.br"
-                        className="w-full bg-[#0e0e0e] border border-[#454655]/50 px-4 py-3 text-white focus:outline-none focus:border-[#b5835a] transition-all font-mono placeholder-[#8f8fa0]"
-                        id="form-email"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-[#e5e2e1] uppercase tracking-wider mb-1.5 font-bold">
-                        Telefone / WhatsApp *
-                      </label>
-                      <input 
-                        type="tel" 
-                        required
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        placeholder="Ex: (62) 99999-8888"
-                        className="w-full bg-[#0e0e0e] border border-[#454655]/50 px-4 py-3 text-white focus:outline-none focus:border-[#b5835a] transition-all font-mono placeholder-[#8f8fa0]"
-                        id="form-phone"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-[#e5e2e1] uppercase tracking-wider mb-1.5 font-bold">
-                        Vínculo com a UFG *
-                      </label>
-                      <select 
-                        required
-                        value={affiliation}
-                        onChange={(e) => setAffiliation(e.target.value)}
-                        className="w-full bg-[#0e0e0e] border border-[#454655]/50 px-4 py-3 text-white focus:outline-none focus:border-[#b5835a] transition-all font-mono"
-                        id="form-affiliation"
-                      >
-                        <option value="Estudante UFG">Estudante UFG (Graduação/Pós)</option>
-                        <option value="Servidor/Docente UFG">Servidor Técnico ou Docente UFG</option>
-                        <option value="Comunidade Externa">Comunidade Externa / Maker Autônomo</option>
-                        <option value="Parceiro IPElab">Parceiro Corporativo ou Patrocinador</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-[#e5e2e1] uppercase tracking-wider mb-1.5 font-bold">
-                        Foco de Interesse / Equipamento Principal *
-                      </label>
-                      <select 
-                        required
-                        value={selectedEquipment}
-                        onChange={(e) => setSelectedEquipment(e.target.value)}
-                        className="w-full bg-[#0e0e0e] border border-[#454655]/50 px-4 py-3 text-white focus:outline-none focus:border-[#b5835a] transition-all font-mono"
-                        id="form-equipment"
-                      >
-                        <option value="Creality K1 Max">Creality K1 (Impressão 3D Ultrarrápida FDM)</option>
-                        <option value="Duplotech 1080">Duplotech 1080 (Corte Laser CO2 - MDF Cru / Acrílicos)</option>
-                        <option value="Fusion 360 CAD">Modelagem Paramétrica Fusion 360</option>
-                        <option value="Ambos Equipamentos">Quero dominar todas as ferramentas!</option>
-                      </select>
-                    </div>
-
-                    <button 
-                      type="submit"
-                      className="w-full bg-[#b5835a] text-white py-4 px-6 font-bold tracking-wider font-mono hover:bg-[#c39167] active:scale-[0.99] transition-all uppercase text-center border border-[#ffffff]/10 mt-6 cursor-pointer"
-                      id="form-submit-btn"
-                    >
-                      SOLICITAR MATRÍCULA NO OFICINA
-                    </button>
-                  </form>
-                </div>
-
-                {submitSuccess && (
-                  <div className="mt-4 p-4 bg-[#2e41d1]/20 border border-[#2e41d1] text-white font-mono text-xs flex items-start gap-2 animate-fade-in" id="success-alert">
-                    <CheckCircle2 className="w-5 h-5 text-[#bcc2ff] flex-shrink-0 mt-0.5" />
-                    <div>
-                      <strong className="block text-white uppercase font-bold">SOLICITAÇÃO RECEBIDA COM SUCESSO!</strong>
-                      Sua reserva foi gerada e gravada no sistema. Verifique a lista ao lado para confirmar os detalhes do credenciamento.
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Visualization and Local Storage Dashboard Side */}
-            <div className="h-full" id="registered-leads">
-              <div className="p-8 bg-[#131313] border border-[#454655]/30 hard-shadow-blue glow-blue h-full flex flex-col justify-between">
-                <div>
-                  <div className="flex justify-between items-center mb-6 border-b border-[#454655]/20 pb-4">
-                    <div className="flex items-center gap-2">
-                      <Users className="text-[#bcc2ff] w-5 h-5" />
-                      <h3 className="font-display text-lg text-white font-bold uppercase tracking-tight">
-                        CANDIDATOS INSCRITOS ({leads.length})
-                      </h3>
-                    </div>
-                    <div className="flex items-center gap-1.5 bg-[#0e0e0e] px-2.5 py-1 border border-[#454655]/30">
-                      <span className={`w-1.5 h-1.5 rounded-full ${dbConnected ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`}></span>
-                      <span className="font-mono text-[9px] font-bold uppercase tracking-wider text-[#e5e2e1]">
-                        {dbConnected ? 'Firebase' : 'Local'}
-                      </span>
-                    </div>
-                  </div>
-
-                  <p className="font-mono text-xs text-[#c5c5d7] mb-6 leading-relaxed">
-                    Aqui estão carregados em tempo real os e-mails e contatos das solicitações. Os dados são persistidos no <strong className="text-white">{dbConnected ? 'Firebase Firestore' : 'localStorage'}</strong>.
-                  </p>
-
-                  <div className="space-y-3 font-mono text-xs max-h-[480px] overflow-y-auto pr-2 custom-scrollbar">
-                    {leads.length === 0 ? (
-                      <div className="p-6 bg-[#0e0e0e] border border-[#454655]/20 text-center text-[#8f8fa0]">
-                        Nenhuma inscrição registrada ainda. Preencha o formulário para testar a persistência!
-                      </div>
-                    ) : (
-                      leads.map((lead) => (
-                        <div 
-                          key={lead.id} 
-                          className="p-4 bg-[#0e0e0e] border border-[#454655]/30 relative group hover:border-[#b5835a] transition-all"
-                        >
-                          <div className="flex items-center gap-1.5 text-[10px] text-[#b5835a] font-bold mb-1">
-                            <BookmarkCheck className="w-3 h-3" />
-                            <span>{lead.affiliation.toUpperCase()}</span>
-                            <span className="text-[#454655]">•</span>
-                            <span className="text-[#8f8fa0] font-normal">{lead.timestamp}</span>
-                          </div>
-
-                          <h4 className="text-white font-bold text-sm mb-1">{lead.name}</h4>
-                          <p className="text-[#8f8fa0] text-[11px] mb-1.5">{lead.email} | {lead.phone}</p>
-                          
-                          <div className="inline-block px-2.5 py-1 bg-[#131313] border border-[#454655]/50 text-[#bcc2ff] text-[10px] font-bold">
-                            Foco: {lead.equipment}
-                          </div>
-                        </div>
-                      ))
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
       {/* Meet the Lab CTA Section */}
       <section className="py-24 px-4 text-center bg-[#131313] border-t border-[#454655]/20 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full opacity-5 pointer-events-none">
@@ -1442,11 +1197,11 @@ export default function Page() {
             Transforme suas ideias em realidade e venha fazer parte de um ecossistema de ponta voltado para a engenharia de precisão e para o espírito maker. O IPElab UFG está de portas abertas.
           </p>
           <button 
-            onClick={() => scrollToSection('inscricao')}
-            className="bg-[#d5cb00] text-black font-mono font-bold tracking-widest uppercase py-4 px-12 text-sm hard-shadow-yellow hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all"
+            onClick={() => scrollToSection('simulador-custos')}
+            className="bg-[#d5cb00] text-black font-mono font-bold tracking-widest uppercase py-4 px-12 text-sm hard-shadow-yellow hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all cursor-pointer"
             id="main-know-lab-btn"
           >
-            CONHECER O LAB & MATRICULAR-SE
+            SIMULAR CUSTOS DA OFICINA
           </button>
         </div>
       </section>
@@ -1476,10 +1231,10 @@ export default function Page() {
 
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 font-mono text-[10px] uppercase tracking-widest text-[#8f8fa0]">
           <div>
-            © 2026 ESTEIRA TECH FAB LAB. TODOS OS DIREITOS RESERVADOS. <span className="text-[#bcc2ff]">PRECISION ENGINEERED.</span>
+            © 2026 ESTEIRA TECH FAB LAB. TODOS OS DIREITOS RESERVADOS. <span className="text-[#bcc2ff]">ENGENHARIA DE PRECISÃO.</span>
           </div>
           <div>
-            CRAFTED FOR <span className="text-[#b5835a]">IPELAB UFG</span>
+            DESENVOLVIDO PARA <span className="text-[#b5835a]">IPELAB UFG</span>
           </div>
         </div>
       </footer>
@@ -1514,14 +1269,88 @@ export default function Page() {
           <Wrench className="w-5 h-5" />
           <span className="text-[9px] font-bold uppercase">SIMULADOR</span>
         </button>
-        <button 
-          onClick={() => { setActiveTab('suporte'); scrollToSection('inscricao'); }}
-          className={`flex flex-col items-center gap-1 font-mono transition-colors ${activeTab === 'suporte' ? 'text-[#bcc2ff]' : 'text-[#8f8fa0]'}`}
-        >
-          <ClipboardCheck className="w-5 h-5" />
-          <span className="text-[9px] font-bold uppercase">INSCRIÇÃO</span>
-        </button>
       </div>
+
+      {/* Modal / Poster de QR Code */}
+      {qrModalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 modal-overlay no-print" onClick={() => setQrModalOpen(false)}>
+          <div className="relative w-full max-w-lg bg-white text-black p-8 rounded-none border-4 border-[#b5835a] poster-preview flex flex-col items-center" onClick={(e) => e.stopPropagation()}>
+            {/* Header com botões de controle - Não imprimíveis */}
+            <div className="absolute top-4 right-4 flex gap-2">
+              <button 
+                onClick={() => window.print()}
+                className="bg-[#2e41d1] text-white hover:bg-[#3a4cdb] px-4 py-1.5 font-mono text-xs font-bold uppercase tracking-wider transition-all cursor-pointer active:scale-95 border-0"
+              >
+                Imprimir Cartaz
+              </button>
+              <button 
+                onClick={() => setQrModalOpen(false)}
+                className="bg-black text-white hover:bg-gray-800 px-3 py-1.5 font-mono text-xs font-bold uppercase cursor-pointer border-0"
+              >
+                Fechar
+              </button>
+            </div>
+
+            {/* Poster Impresso / Visualizado */}
+            <div className="print-poster-container w-full flex flex-col items-center text-center mt-6">
+              {/* Logo e Instituição */}
+              <div className="flex items-center gap-3 justify-center mb-4">
+                <img 
+                  src="/logo-ipelab.png" 
+                  alt="Logo IPElab UFG" 
+                  className="h-12 w-auto object-contain filter invert" 
+                />
+              </div>
+              
+              <span className="font-mono text-[9px] tracking-widest text-gray-500 uppercase font-bold">UNIVERSIDADE FEDERAL DE GOIÁS</span>
+              <h2 className="font-mono text-sm font-bold text-gray-800 uppercase mt-0.5">IPELAB - CO-WORKING MAKER</h2>
+              
+              <div className="w-12 h-1 bg-[#b5835a] my-3"></div>
+
+              <h1 className="font-display text-3xl text-black font-black uppercase tracking-tight leading-tight">
+                OFICINA<br />
+                <span className="text-[#b5835a]">ESTEIRA TECH</span>
+              </h1>
+              
+              <p className="font-mono text-[10px] text-gray-600 mt-1 max-w-xs mx-auto uppercase tracking-wider font-bold">
+                Engenharia de Conforto & Fabricação Digital
+              </p>
+
+              {/* QR Code Frame */}
+              <div className="my-6 p-3 border-4 border-black bg-white inline-block">
+                {currentUrl ? (
+                  <img 
+                    src={`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(currentUrl)}`} 
+                    alt="QR Code Oficina Esteira Tech"
+                    className="w-40 h-40 object-contain"
+                  />
+                ) : (
+                  <div className="w-40 h-40 flex items-center justify-center font-mono text-xs text-gray-400">
+                    Gerando QR Code...
+                  </div>
+                )}
+              </div>
+
+              {/* Instruções para os Alunos */}
+              <div className="space-y-1.5 border-t border-gray-200 pt-5 w-full max-w-sm">
+                <p className="font-mono text-xs text-gray-800 font-bold uppercase tracking-wide">
+                  👉 ESCANEIE PARA ACESSAR 👈
+                </p>
+                <p className="font-mono text-[10px] text-gray-500 leading-relaxed">
+                  Acesse o Simulador de Custos de Impressão 3D e MDF, baixe os arquivos da aula e acompanhe a jornada maker!
+                </p>
+                <p className="font-mono text-[9px] text-[#2e41d1] break-all font-bold mt-1">
+                  {currentUrl}
+                </p>
+              </div>
+
+              <div className="mt-6 font-mono text-[8px] text-gray-400 uppercase tracking-widest border-t border-gray-100 pt-3 w-full">
+                IPELab UFG • PROTÓTIPO FÍSICO COM CREALITY K1 & DUPLOTECH 1080
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

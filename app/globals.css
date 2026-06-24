@@ -137,4 +137,50 @@
   }
 }
 
+/* Estilos para Modal de QR Code e Impressão de Poster A4 */
+.modal-overlay {
+  background-color: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+}
+
+.poster-preview {
+  background: #ffffff;
+  color: #0e0e0e;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  font-family: var(--font-space-grotesk), sans-serif;
+}
+
+@media print {
+  /* Oculta tudo na página para impressão */
+  html, body, #top, .tech-mesh, nav, header, section, footer, .modal-overlay {
+    display: none !important;
+    background: transparent !important;
+  }
+
+  /* Exibe exclusivamente o poster */
+  .print-poster-container {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    padding: 3cm 2cm !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    page-break-after: avoid !important;
+    page-break-before: avoid !important;
+  }
+
+  .print-poster-container img {
+    max-width: 100% !important;
+  }
+}
+
+
 
