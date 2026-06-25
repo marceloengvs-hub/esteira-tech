@@ -189,7 +189,7 @@ export default function Page() {
               onClick={() => scrollToSection('maquinas-maker')} 
               className="text-[#c5c5d7] hover:text-[#bcc2ff] font-medium text-sm transition-colors duration-200 cursor-pointer"
             >
-              Tecnologia & Máquinas
+              Ferramentas & Máquinas
             </button>
             <button 
               onClick={() => scrollToSection('ipelab-apresentacao')} 
@@ -357,16 +357,16 @@ export default function Page() {
         <div className="relative z-20 max-w-4xl mx-auto w-full mt-auto">
           <div className="inline-flex items-center gap-2 bg-[#b5835a] text-white font-mono text-xs px-4 py-1.5 mb-6 milled-edge uppercase tracking-wider font-bold">
             <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span>
-            FABRICAÇÃO DE PRECISÃO v2.4 | IPELAB UFG
+            OFICINA DE PRODUTO | IPELAB UFG
           </div>
           
           <h1 className="font-display text-4xl md:text-6xl text-[#ffffff] mb-6 uppercase tracking-tight font-extrabold leading-[1.1]">
-            Engenharia de Conforto:<br />
-            <span className="text-[#bcc2ff]">A Nova Era Esteira Tech</span>
+            Esteira Tech:<br />
+            <span className="text-[#bcc2ff]">Da Ideia à Bancada</span>
           </h1>
           
           <p className="font-mono text-sm md:text-base text-[#c5c5d7] mb-10 max-w-2xl border-l-[3px] border-[#b5835a] pl-5 leading-relaxed">
-            Unindo a excelência do <span className="text-[#ffffff] font-bold">IPElab UFG</span> em fabricação digital com design industrial sofisticado para projetar e fabricar acessórios premium com acabamento em <span className="text-[#b5835a] font-bold">MDF Cru</span> e polímeros de alta velocidade <span className="text-white">Branco e Cinza ABS</span>.
+            Projeto e construção de um suporte ergonômico para esteira no <span className="text-[#ffffff] font-bold">IPElab UFG</span>. Do esboço no papel à peça montada na bancada, usando <span className="text-[#b5835a] font-bold">MDF cortado a laser</span> e peças impressas em <span className="text-white">filamento ABS</span>.
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-4xl mt-8">
@@ -397,7 +397,7 @@ export default function Page() {
       <section className="bg-[#b5835a]/10 border-b border-[#b5835a]/30 py-4 px-4 font-mono text-center">
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-center gap-3 text-[#e5e2e1] text-xs md:text-sm">
           <Info className="w-5 h-5 text-[#b5835a] flex-shrink-0" />
-          <span>🚀 <strong className="text-white font-bold">Oficina em Andamento:</strong> Protótipos físicos com as super impressoras <strong className="text-white">Creality K1 Max</strong> e corte laser <strong className="text-white">Duplotech 1080</strong> no IPElab da UFG!</span>
+          <span>🛠️ <strong className="text-white font-bold">Oficina em Andamento:</strong> Construção dos protótipos com impressora <strong className="text-white">Creality K1 Max</strong> e cortadora laser <strong className="text-white">Duplotech 1080</strong> no IPElab da UFG.</span>
         </div>
       </section>
 
@@ -406,9 +406,9 @@ export default function Page() {
         <div className="max-w-7xl mx-auto">
           <div className="mb-12 border-b border-[#454655]/20 pb-6 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
             <div>
-              <span className="font-mono text-xs uppercase tracking-widest text-[#d5cb00] font-bold">STACK DE TECNOLOGIA</span>
+              <span className="font-mono text-xs uppercase tracking-widest text-[#d5cb00] font-bold">COMO VAMOS CONSTRUIR</span>
               <h2 className="font-display text-3xl md:text-4xl text-white font-bold uppercase mt-1 tracking-tight">
-                INFRAESTRUTURA TÉCNICA
+                ETAPAS DE FABRICAÇÃO
               </h2>
             </div>
             <div className="w-24 h-1 bg-[#d5cb00]"></div>
@@ -422,16 +422,16 @@ export default function Page() {
                   <div className="p-3 bg-[#2e41d1]/20 border border-[#2e41d1]/50">
                     <Cpu className="text-[#bcc2ff] w-8 h-8" />
                   </div>
-                  <span className="font-mono text-[10px] text-[#8f8fa0] bg-[#1c1b1b] px-2 py-1 border border-[#454655]/20">SYS.ID: F360-MOD</span>
+                  <span className="font-mono text-[10px] text-[#8f8fa0] bg-[#1c1b1b] px-2 py-1 border border-[#454655]/20">ETAPA 1: PROJETO</span>
                 </div>
-                <h3 className="font-display text-xl text-white font-bold mb-3 uppercase tracking-tight">Fusion 360</h3>
+                <h3 className="font-display text-xl text-white font-bold mb-3 uppercase tracking-tight">Modelagem no Fusion 360</h3>
                 <p className="font-mono text-xs text-[#c5c5d7] leading-relaxed mb-4">
-                  Modelagem paramétrica tridimensional. Garantia de tolerâncias milimétricas de precisão mecânica, preparação de vetores DXF e planificação de polias para montagem de encaixes sob medida.
+                  Desenho das peças em 3D no computador. Cada encaixe é projetado com medidas exatas para que tudo se monte perfeitamente na bancada.
                 </p>
               </div>
               <div className="font-mono text-[11px] text-[#bcc2ff] border-t border-[#454655]/20 pt-3 flex items-center gap-1.5 mt-4">
                 <span className="w-2 h-2 bg-[#2e41d1] animate-pulse"></span>
-                Exportação CNC Integrada
+                Projeto Digital → Peça Física
               </div>
             </div>
 
@@ -442,16 +442,16 @@ export default function Page() {
                   <div className="p-3 bg-[#b8af00]/20 border border-[#b8af00]/50">
                     <Layers className="text-[#d5cb00] w-8 h-8" />
                   </div>
-                  <span className="font-mono text-[10px] text-[#8f8fa0] bg-[#1c1b1b] px-2 py-1 border border-[#454655]/20">PRT-3DX: INS</span>
+                  <span className="font-mono text-[10px] text-[#8f8fa0] bg-[#1c1b1b] px-2 py-1 border border-[#454655]/20">ETAPA 2: IMPRESSÃO</span>
                 </div>
                 <h3 className="font-display text-xl text-white font-bold mb-3 uppercase tracking-tight">Impressão 3D</h3>
                 <p className="font-mono text-xs text-[#c5c5d7] leading-relaxed mb-4">
-                  Fabricação em polímero termoplástico termorresistente de alta rigidez estrutural. Prototipagem com suporte para polímero <strong className="text-white">Branco e Cinza ABS</strong> de filamento e PLA Premium, validando ergonomias perfeitas.
+                  Peças de suporte e encaixe fabricadas na impressora 3D com filamento <strong className="text-white">ABS Branco e Cinza</strong>. Cada componente sai pronto para ser montado com as chapas de MDF.
                 </p>
               </div>
               <div className="font-mono text-[11px] text-[#d5cb00] border-t border-[#454655]/20 pt-3 flex items-center gap-1.5 mt-4">
                 <span className="w-2 h-2 bg-[#b8af00] animate-pulse"></span>
-                Câmaras de Alta Velocidade (600mm/s)
+                Peças Prontas em Minutos
               </div>
             </div>
 
@@ -462,16 +462,16 @@ export default function Page() {
                   <div className="p-3 bg-[#bf031c]/20 border border-[#bf031c]/50">
                     <Scissors className="text-[#ffb3ad] w-8 h-8" />
                   </div>
-                  <span className="font-mono text-[10px] text-[#8f8fa0] bg-[#1c1b1b] px-2 py-1 border border-[#454655]/20">SYS.ID: LSR-CUT</span>
+                  <span className="font-mono text-[10px] text-[#8f8fa0] bg-[#1c1b1b] px-2 py-1 border border-[#454655]/20">ETAPA 3: CORTE</span>
                 </div>
                 <h3 className="font-display text-xl text-white font-bold mb-3 uppercase tracking-tight">Corte Laser</h3>
                 <p className="font-mono text-xs text-[#c5c5d7] leading-relaxed mb-4">
-                  Corte por laser de CO₂ com controle focal e corte vetorial. Execução direta com chapas rígidas de <strong className="text-[#b5835a]">MDF Cru (#b5835a)</strong> e acrílico fosco, com acabamento de queima controlada de bordas.
+                  As chapas de <strong className="text-[#b5835a]">MDF</strong> são cortadas e gravadas pela máquina laser, formando a estrutura principal da esteira. Corte limpo e encaixes perfeitos.
                 </p>
               </div>
               <div className="font-mono text-[11px] text-[#ffb3ad] border-t border-[#454655]/20 pt-3 flex items-center gap-1.5 mt-4">
                 <span className="w-2 h-2 bg-[#bf031c] animate-pulse"></span>
-                Corte Milimétrico Duplotech
+                Chapas Cortadas com Precisão
               </div>
             </div>
           </div>
@@ -484,12 +484,12 @@ export default function Page() {
       <section className="py-20 px-4 md:px-10 bg-[#131313] border-y border-[#454655]/20" id="maquinas-maker">
         <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <span className="text-[#b5835a] text-xs font-mono font-bold tracking-widest uppercase">MÁQUINAS DO LABORATÓRIO IPELAB UFG</span>
+            <span className="text-[#b5835a] text-xs font-mono font-bold tracking-widest uppercase">FERRAMENTAS DA OFICINA</span>
             <h2 className="font-display text-3xl md:text-5xl text-white font-black uppercase mt-2 tracking-tight">
-              SUPERAR LIMITES COM A FORÇA MAKER
+              AS MÁQUINAS QUE VAMOS USAR
             </h2>
             <p className="font-mono text-xs md:text-sm text-[#c5c5d7] mt-4 leading-relaxed">
-              O IPElab é dotado de ferramentaria de ponta mundial da UFG. No oficina, usaremos ativamente os seguintes equipamentos para usinar e polimerizar sua Esteira Tech física:
+              Conheça os equipamentos do IPElab UFG que serão utilizados na oficina para cortar, imprimir e montar a sua Esteira Tech:
             </p>
           </div>
 
@@ -669,10 +669,10 @@ export default function Page() {
             {/* Column 1: Text Info */}
             <div className="space-y-8">
               <div>
-                <span className="font-mono text-xs uppercase text-[#bcc2ff] tracking-widest font-bold">PRECISÃO VIRTUAL</span>
+                <span className="font-mono text-xs uppercase text-[#bcc2ff] tracking-widest font-bold">DO DIGITAL AO FÍSICO</span>
                 <h2 className="font-display text-4xl text-white font-extrabold uppercase mt-1 leading-tight tracking-tight">
-                  EXCELÊNCIA<br />
-                  <span className="text-[#bcc2ff]">PROTOTIPADA</span>
+                  PROJETO<br />
+                  <span className="text-[#bcc2ff]">& MONTAGEM</span>
                 </h2>
               </div>
               
@@ -731,9 +731,9 @@ export default function Page() {
       <section className="py-20 px-4 md:px-10 bg-[#131313] border-t border-[#454655]/20">
         <div className="max-w-7xl mx-auto">
           <div className="border-b border-[#454655]/30 pb-4 mb-12">
-            <span className="font-mono text-[#bcc2ff] text-xs font-bold tracking-widest uppercase">CICLO DE DESENVOLVIMENTO MAKER</span>
+            <span className="font-mono text-[#bcc2ff] text-xs font-bold tracking-widest uppercase">PASSO A PASSO</span>
             <h2 className="font-display text-2xl md:text-4xl text-white font-bold uppercase">
-              A Jornada Maker: <span className="text-[#b5835a]">Do Rascunho à Realidade</span>
+              Da Ideia ao Produto: <span className="text-[#b5835a]">Construa na Bancada</span>
             </h2>
           </div>
 
@@ -792,7 +792,7 @@ export default function Page() {
                   />
                 </div>
                 <div className="p-3 bg-[#131313] border-t border-[#454655]/20 mt-2 font-mono text-[10px] text-[#c5c5d7] italic">
-                  &ldquo;A ponte mecânica entre o modelo virtual e a peça física final é onde a engenharia de precisão ganha vida.&rdquo;
+                  &ldquo;É na bancada que o desenho do computador vira peça de verdade — e isso é o melhor da oficina.&rdquo;
                 </div>
               </div>
             </div>
@@ -804,7 +804,7 @@ export default function Page() {
       <section className="py-20 px-4 md:px-10 bg-[#131313] border-t border-[#454655]/20" id="simulador-custos">
         <div className="max-w-6xl mx-auto">
           <div className="text-center max-w-3xl mx-auto mb-12">
-            <span className="text-[#b5835a] text-xs font-mono font-bold tracking-widest uppercase">PLANEJAMENTO FINANCEIRO MAKER</span>
+            <span className="text-[#b5835a] text-xs font-mono font-bold tracking-widest uppercase">QUANTO CUSTA CONSTRUIR?</span>
             <h2 className="font-display text-3xl md:text-5xl text-white font-black uppercase mt-2 tracking-tight">
               Simulador de Custos de Material
             </h2>
@@ -1173,7 +1173,7 @@ export default function Page() {
             Crie Conosco no IPElab
           </h2>
           <p className="font-mono text-sm text-[#c5c5d7] mb-10 leading-relaxed">
-            Transforme suas ideias em realidade e venha fazer parte de um ecossistema de ponta voltado para a engenharia de precisão e para o espírito maker. O IPElab UFG está de portas abertas.
+            Traga suas ideias, aprenda a usar as ferramentas e construa seu próprio projeto na bancada. O IPElab UFG está de portas abertas.
           </p>
           <button 
             onClick={() => scrollToSection('simulador-custos')}
@@ -1197,7 +1197,7 @@ export default function Page() {
               />
               <span className="font-display text-2xl tracking-tighter text-[#bcc2ff] font-bold">ESTEIRA TECH</span>
             </div>
-            <span className="font-mono text-[9px] text-[#b5835a] uppercase tracking-widest mt-1.5">Selo de Qualidade IPElab UFG</span>
+            <span className="font-mono text-[9px] text-[#b5835a] uppercase tracking-widest mt-1.5">Oficina de Produto IPElab UFG</span>
           </div>
           
           <div className="flex flex-wrap justify-center gap-6 font-mono text-[10px] uppercase tracking-widest">
@@ -1210,7 +1210,7 @@ export default function Page() {
 
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 font-mono text-[10px] uppercase tracking-widest text-[#8f8fa0]">
           <div>
-            © 2026 ESTEIRA TECH FAB LAB. TODOS OS DIREITOS RESERVADOS. <span className="text-[#bcc2ff]">ENGENHARIA DE PRECISÃO.</span>
+            © 2026 ESTEIRA TECH — OFICINA DE PRODUTO. TODOS OS DIREITOS RESERVADOS. <span className="text-[#bcc2ff]">DA IDEIA À BANCADA.</span>
           </div>
           <div>
             DESENVOLVIDO PARA <span className="text-[#b5835a]">IPELAB UFG</span>
