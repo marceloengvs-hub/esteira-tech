@@ -476,27 +476,6 @@ export default function Page() {
             </div>
           </div>
 
-          {/* Seção de Material de Apoio da Oficina */}
-          <div className="mt-12 bg-[#131313] border border-[#b5835a]/30 p-8 hard-shadow-mdf glow-mdf flex flex-col md:flex-row justify-between items-center gap-6">
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-[#b5835a]/10 border border-[#b5835a]/30 shrink-0">
-                <BookmarkCheck className="text-[#b5835a] w-8 h-8" />
-              </div>
-              <div>
-                <h3 className="font-display text-xl text-white font-bold uppercase tracking-tight">Material de Apoio da Oficina</h3>
-                <p className="font-mono text-xs text-[#c5c5d7] mt-1.5 max-w-xl">
-                  Baixe o vetor DXF oficial da oficina para realizar o corte e a gravação na máquina a laser e acompanhar a montagem física da Esteira Tech.
-                </p>
-              </div>
-            </div>
-            <a 
-              href="/UFG.zip" 
-              download="UFG.zip"
-              className="bg-[#b5835a] hover:bg-[#c39167] text-white py-4 px-8 font-mono font-bold tracking-wider text-center active:scale-[0.98] transition-all uppercase text-sm border border-white/10 shrink-0 cursor-pointer text-decoration-none inline-block"
-            >
-              Baixar Gabarito (.ZIP)
-            </a>
-          </div>
 
         </div>
       </section>
