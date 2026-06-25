@@ -490,11 +490,11 @@ export default function Page() {
               </div>
             </div>
             <a 
-              href="/UFG.dxf" 
-              download="UFG.dxf"
+              href="/UFG.zip" 
+              download="UFG.zip"
               className="bg-[#b5835a] hover:bg-[#c39167] text-white py-4 px-8 font-mono font-bold tracking-wider text-center active:scale-[0.98] transition-all uppercase text-sm border border-white/10 shrink-0 cursor-pointer text-decoration-none inline-block"
             >
-              Baixar Gabarito DXF (UFG.dxf)
+              Baixar Gabarito (.ZIP)
             </a>
           </div>
 
