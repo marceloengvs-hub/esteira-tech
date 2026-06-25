@@ -661,74 +661,8 @@ export default function Page() {
         </div>
       </section>
 
-      {/* CAD Showcase Section (Excelência Prototipada) */}
-      <section className="py-20 px-4 md:px-10 bg-[#0e0e0e]" id="galeria">
-        <div className="max-w-7xl mx-auto">
-          
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Column 1: Text Info */}
-            <div className="space-y-8">
-              <div>
-                <span className="font-mono text-xs uppercase text-[#bcc2ff] tracking-widest font-bold">DO DIGITAL AO FÍSICO</span>
-                <h2 className="font-display text-4xl text-white font-extrabold uppercase mt-1 leading-tight tracking-tight">
-                  PROJETO<br />
-                  <span className="text-[#bcc2ff]">& MONTAGEM</span>
-                </h2>
-              </div>
-              
-              <div className="space-y-6">
-                <div className="flex items-start gap-4 p-5 bg-[#131313] border-l-4 border-[#2e41d1] border border-[#454655]/10 hover:border-[#2e41d1]/30 transition-all duration-300">
-                  <div className="w-10 h-10 bg-[#2e41d1]/10 rounded-none flex items-center justify-center flex-shrink-0 border border-[#2e41d1]/30">
-                    <Award className="text-[#bcc2ff] w-5 h-5" />
-                  </div>
-                  <div>
-                    <h4 className="font-mono text-xs font-bold text-white uppercase tracking-wider">Qualidade IPElab UFG</h4>
-                    <p className="font-mono text-xs text-[#c5c5d7] mt-1.5 leading-relaxed">
-                      Acesso aos laboratórios de criatividade da UFG. Orientado por técnicos e engenheiros.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4 p-5 bg-[#131313] border-l-4 border-[#b5835a] border border-[#454655]/10 hover:border-[#b5835a]/30 transition-all duration-300">
-                  <div className="w-10 h-10 bg-[#b5835a]/10 rounded-none flex items-center justify-center flex-shrink-0 border border-[#b5835a]/30">
-                    <Settings className="text-[#b5835a] w-5 h-5" />
-                  </div>
-                  <div>
-                    <h4 className="font-mono text-xs font-bold text-white uppercase tracking-wider">Design Adaptativo & Robusto</h4>
-                    <p className="font-mono text-xs text-[#c5c5d7] mt-1.5 leading-relaxed">
-                      Sistemas paramétricos modulares em CAD 3D que se adaptam exatamente às dimensões solicitadas para seu projeto funcional da Esteira Tech.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Column 2: CAD Image Frame */}
-            <div className="relative p-2 bg-[#131313] border border-[#454655]/40 hard-shadow-mdf glow-mdf transition-all duration-300">
-              <div className="absolute -top-1 -left-1 w-12 h-12 border-t-2 border-l-2 border-[#b5835a] pointer-events-none z-20"></div>
-              <div className="absolute -bottom-1 -right-1 w-12 h-12 border-b-2 border-r-2 border-[#b5835a] pointer-events-none z-20"></div>
-              
-              <div className="relative w-full bg-[#0e0e0e] flex items-center justify-center">
-                <img 
-                  alt="Fusion 360 virtual design schema model for Esteira Tech" 
-                  className="w-full h-auto object-cover grayscale contrast-[1.3] brightness-90 filter" 
-                  src="/meu-cad-desenho.png"
-                />
-              </div>
-              
-              <div className="p-3 bg-[#0e0e0e] border-t border-[#454655]/30">
-                <p className="font-mono text-[10px] text-[#8f8fa0] text-center">
-                  PROTOTIPAGEM DE ENCAIXE NO FUSION 360 (PLANIFICADO PARA CORTE A LASER DUPLOTECH)
-                </p>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
       {/* Physical Integration Section */}
-      <section className="py-20 px-4 md:px-10 bg-[#131313] border-t border-[#454655]/20">
+      <section className="py-20 px-4 md:px-10 bg-[#0e0e0e]">
         <div className="max-w-7xl mx-auto">
           <div className="border-b border-[#454655]/30 pb-4 mb-12">
             <span className="font-mono text-[#bcc2ff] text-xs font-bold tracking-widest uppercase">PASSO A PASSO</span>
@@ -797,6 +731,72 @@ export default function Page() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* CAD Showcase Section (Projeto & Montagem) */}
+      <section className="py-20 px-4 md:px-10 bg-[#131313] border-t border-[#454655]/20" id="galeria">
+        <div className="max-w-7xl mx-auto">
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Column 1: Text Info */}
+            <div className="space-y-8">
+              <div>
+                <span className="font-mono text-xs uppercase text-[#bcc2ff] tracking-widest font-bold">DO DIGITAL AO FÍSICO</span>
+                <h2 className="font-display text-4xl text-white font-extrabold uppercase mt-1 leading-tight tracking-tight">
+                  PROJETO<br />
+                  <span className="text-[#bcc2ff]">& MONTAGEM</span>
+                </h2>
+              </div>
+              
+              <div className="space-y-6">
+                <div className="flex items-start gap-4 p-5 bg-[#131313] border-l-4 border-[#2e41d1] border border-[#454655]/10 hover:border-[#2e41d1]/30 transition-all duration-300">
+                  <div className="w-10 h-10 bg-[#2e41d1]/10 rounded-none flex items-center justify-center flex-shrink-0 border border-[#2e41d1]/30">
+                    <Award className="text-[#bcc2ff] w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="font-mono text-xs font-bold text-white uppercase tracking-wider">Qualidade IPElab UFG</h4>
+                    <p className="font-mono text-xs text-[#c5c5d7] mt-1.5 leading-relaxed">
+                      Acesso aos laboratórios de criatividade da UFG. Orientado por técnicos e engenheiros.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4 p-5 bg-[#131313] border-l-4 border-[#b5835a] border border-[#454655]/10 hover:border-[#b5835a]/30 transition-all duration-300">
+                  <div className="w-10 h-10 bg-[#b5835a]/10 rounded-none flex items-center justify-center flex-shrink-0 border border-[#b5835a]/30">
+                    <Settings className="text-[#b5835a] w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="font-mono text-xs font-bold text-white uppercase tracking-wider">Design Adaptativo & Robusto</h4>
+                    <p className="font-mono text-xs text-[#c5c5d7] mt-1.5 leading-relaxed">
+                      Sistemas paramétricos modulares em CAD 3D que se adaptam exatamente às dimensões solicitadas para seu projeto funcional da Esteira Tech.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Column 2: CAD Image Frame */}
+            <div className="relative p-2 bg-[#131313] border border-[#454655]/40 hard-shadow-mdf glow-mdf transition-all duration-300">
+              <div className="absolute -top-1 -left-1 w-12 h-12 border-t-2 border-l-2 border-[#b5835a] pointer-events-none z-20"></div>
+              <div className="absolute -bottom-1 -right-1 w-12 h-12 border-b-2 border-r-2 border-[#b5835a] pointer-events-none z-20"></div>
+              
+              <div className="relative w-full bg-[#0e0e0e] flex items-center justify-center">
+                <img 
+                  alt="Fusion 360 virtual design schema model for Esteira Tech" 
+                  className="w-full h-auto object-cover grayscale contrast-[1.3] brightness-90 filter" 
+                  src="/meu-cad-desenho.png"
+                />
+              </div>
+              
+              <div className="p-3 bg-[#0e0e0e] border-t border-[#454655]/30">
+                <p className="font-mono text-[10px] text-[#8f8fa0] text-center">
+                  PROTOTIPAGEM DE ENCAIXE NO FUSION 360 (PLANIFICADO PARA CORTE A LASER DUPLOTECH)
+                </p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </section>
 
